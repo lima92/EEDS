@@ -82,7 +82,29 @@
 	      .type   _reset, %function
         .thumb_func
 _reset: 
-	      b .  // do nothing
+	      //load CMU base address
+		ldr r1, cmu_base_addr
+
+		//load current value of HFPERCLK ENABLE
+		ldr r2, [r1, #CMU_HFPERCLKEN0]
+
+		//set bit for GPIO clk
+		mov r3, #1
+		lsl r3, r3, #CMU_HFPERCLKEN0_GPIO
+		orr r2, [r1, #CMU_HFPERCLKEN0]
+
+		//load GPIO_CTRL addr
+		ldr r3,  gpio_base_addr
+		mov r4, #0x2
+		str r3, r4
+
+		//set pins 8-15 to output
+		mov r4, 0x55555555
+		str r4, [r3, #GPIO_MODEH]
+
+		//set LEDs
+		mov r4, 0x01010101
+		str r4, [r3, #GPIO_DOUT]
 	
 	/////////////////////////////////////////////////////////////////////////////
 	//
