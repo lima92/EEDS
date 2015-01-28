@@ -119,13 +119,21 @@ _reset:
 		mov r6, #0xFF
 		str r6, [r5, #GPIO_DOUT]
 
-pin_loop:
-		
-		ldr r7, [r5, #GPIO_DIN]
-		lsl r7, r7, #8
-		str r7, [r3, #GPIO_DOUT]
+		ldr r3, gpio_base_addr
+		mov r6, #0x22222222
+		str r6, [r3]
 
-		b pin_loop
+
+		mov r6, #0xFF
+		str r6, [r3, #GPIO_EXTRISE]
+		str r6, [r3, #GPIO_EXTFALL]
+		str r6, [r3, #GPIO_IEN]
+
+		ldr r2, iser0_addr
+		mov r6, #0x802
+		str r6, [r2]
+
+
 	
 	/////////////////////////////////////////////////////////////////////////////
 	//
@@ -136,8 +144,12 @@ pin_loop:
 	
         .thumb_func
 gpio_handler:  
-
-	      b .  // do nothing
+		ldr r7, [r5, #GPIO_DIN]
+		lsl r7, r7, #8
+		str r7, [r3, #GPIO_DOUT]
+		ldr r6, [r3, #GPIO_IF]
+		str r6, [r3, #GPIO_IFC]
+	      
 	
 	/////////////////////////////////////////////////////////////////////////////
 	
@@ -155,3 +167,5 @@ gpio_pa_base_addr:
 	.long GPIO_PA_BASE
 gpio_pc_base_addr:
 	.long GPIO_PC_BASE
+iser0_addr:
+	.long ISER0
