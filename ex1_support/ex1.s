@@ -91,19 +91,23 @@ _reset:
 		//set bit for GPIO clk
 		mov r3, #1
 		lsl r3, r3, #CMU_HFPERCLKEN0_GPIO
-		orr r2, [r1, #CMU_HFPERCLKEN0]
+		orr r2, r2, r3
+
+		str r2, [r1, #CMU_HFPERCLKEN0]
 
 		//load GPIO_CTRL addr
-		ldr r3,  gpio_base_addr
+		ldr r3,  gpio_pa_base_addr
 		mov r4, #0x2
-		str r3, r4
+		str r4, [r3]
 
+		
 		//set pins 8-15 to output
-		mov r4, 0x55555555
+		//ldr r3, gpio_pa_base_addr
+		mov r4, #0x55555555
 		str r4, [r3, #GPIO_MODEH]
 
 		//set LEDs
-		mov r4, 0x01010101
+		mov r4, #0xFF00
 		str r4, [r3, #GPIO_DOUT]
 	
 	/////////////////////////////////////////////////////////////////////////////
@@ -124,3 +128,11 @@ gpio_handler:
 dummy_handler:  
         b .  // do nothing
 
+cmu_base_addr:
+	.long CMU_BASE
+
+gpio_base_addr:
+	.long GPIO_BASE
+
+gpio_pa_base_addr:
+	.long GPIO_PA_BASE
