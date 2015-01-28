@@ -109,6 +109,23 @@ _reset:
 		//set LEDs
 		mov r4, #0xFF00
 		str r4, [r3, #GPIO_DOUT]
+
+		//set pins for input
+		ldr r5, gpio_pc_base_addr
+		mov r6, #0x33333333
+		str r6, [r5, #GPIO_MODEL]
+
+		//enable internal pull-up
+		mov r6, #0xFF
+		str r6, [r5, #GPIO_DOUT]
+
+pin_loop:
+		
+		ldr r7, [r5, #GPIO_DIN]
+		lsl r7, r7, #8
+		str r7, [r3, #GPIO_DOUT]
+
+		b pin_loop
 	
 	/////////////////////////////////////////////////////////////////////////////
 	//
@@ -136,3 +153,5 @@ gpio_base_addr:
 
 gpio_pa_base_addr:
 	.long GPIO_PA_BASE
+gpio_pc_base_addr:
+	.long GPIO_PC_BASE
