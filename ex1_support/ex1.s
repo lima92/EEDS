@@ -133,14 +133,15 @@ _reset:
 		ldr r6, =#0x0802
 		str r6, [r2]
 		
-		ldr r2, scr_addr
+ 		ldr r2, scr_addr
 		ldr r6, =#6
 		str r6, [r2]
 
-      		B main
+      		b main
 	
 	/////////////////////////////////////////////////////////////////////////////
 	//
+	
   // GPIO handler
   // The CPU will jump here when there is a GPIO interrupt
 	//
@@ -153,15 +154,14 @@ gpio_handler:
 		str r7, [r3, #GPIO_DOUT]
 		ldr r6, [r8, #GPIO_IF]
 		str r6, [r8, #GPIO_IFC]
-	        B main
+	        bx LR
 	
 	/////////////////////////////////////////////////////////////////////////////
 	
 
 main:
-	
-	wfi
-	B main
+		wfi
+		b main
 
         .thumb_func
 dummy_handler:  
