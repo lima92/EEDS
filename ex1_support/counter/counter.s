@@ -134,13 +134,12 @@ _reset:
 		str r6, [r2]
 		
  		ldr r2, scr_addr
-		ldr r6, =#6
+		ldr r6, =#0x6
 		str r6, [r2]
 
 		//set counter to zero
 		mov r0, #0b11111111
-		lsl r0, #8
-	//	bl update_leds
+		bl update_leds
 		b main
 	
 	/////////////////////////////////////////////////////////////////////////////
@@ -153,27 +152,26 @@ _reset:
 	
         .thumb_func
 gpio_handler:
-
-		//read buttons
-		ldr r7, [r5, #GPIO_DIN]
-
-		and r1, r7, #0b10000000
-		cbnz r1, decrement
-	
-		and r1, r7, #0b00100000
-		cbnz r1, increment
-
 		//clear interrupt
 		ldr r6, [r8, #GPIO_IF]
 		str r6, [r8, #GPIO_IFC]
 	
-		bx LR
+		//read buttons
+		ldr r7, [r5, #GPIO_DIN]
+	
+		cmp r7, #0b11111011
+		beq decrement
+	
+		cmp r7, #0b11011111
+		beq increment
+
+		bx lr
 	
 	/////////////////////////////////////////////////////////////////////////////
 
 main:
 		wfi
-		b main
+		bl main
 
 increment:
 		sub r0, r0, #1
@@ -185,10 +183,10 @@ decrement:
 		
 
 update_leds:
-		lsl r0, #8
-		str r0, [r3, #GPIO_DOUT]
-		lsr r0, #8
-		bx LR
+	
+		lsl r9, r0, #8
+		str r9, [r3, #GPIO_DOUT]
+		bx lr
 
         .thumb_func
 dummy_handler:  
