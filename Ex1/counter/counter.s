@@ -124,15 +124,18 @@ _reset:
 		mov r6, #0x22222222
 		str r6, [r8]
 
+		//enable interrupt on falling edge
 		mov r6, #0xFF
 		str r6, [r8, #GPIO_EXTIRISE]
 		str r6, [r8, #GPIO_EXTIFALL]
 		str r6, [r8, #GPIO_IEN]
 
+		//Enable odd and even interrupt for GPIO
 		ldr r2, iser0_addr
 		ldr r6, =#0x0802
 		str r6, [r2]
 		
+		//enable deepsleep
  		ldr r2, scr_addr
 		ldr r6, =#0x6
 		str r6, [r2]
@@ -159,9 +162,11 @@ gpio_handler:
 		//read buttons
 		ldr r7, [r5, #GPIO_DIN]
 	
-		cmp r7, #0b11111011
+		//check if sw8 is pressed
+		cmp r7, #0b01111111
 		beq decrement
 	
+		//check if sw6 is pressed
 		cmp r7, #0b11011111
 		beq increment
 
@@ -169,21 +174,25 @@ gpio_handler:
 	
 	/////////////////////////////////////////////////////////////////////////////
 
+//main loop
 main:
 		wfi
 		bl main
 
+
 increment:
+		//subtract 1 from the counter variable
 		sub r0, r0, #1
 		b update_leds
 
 decrement:
+		//add 1 from the counter variable
 		add r0, r0, #1
 		b update_leds
 		
 
 update_leds:
-	
+		//left shift and store the value on GPIO_DOUT
 		lsl r9, r0, #8
 		str r9, [r3, #GPIO_DOUT]
 		bx lr
