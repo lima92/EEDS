@@ -6,6 +6,15 @@
 /* function to setup the timer */
 void setupTimer(uint16_t period)
 {
+  //  uint32_t clock = *CMU_HFPERCLKEN0;
+  *CMU_HFPERCLKEN0 |= (1 << 6);
+
+  //14MHz clock frq. divided by 4800 samples per second
+  *TIMER1_TOP = period;
+  *TIMER1_IEN = 1;
+ 
+  *TIMER1_CMD = 1;
+  
   /*
     TODO enable and set up the timer
     

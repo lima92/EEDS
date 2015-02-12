@@ -6,6 +6,8 @@
 /* function to set up GPIO mode and interrupts*/
 void setupGPIO()
 {
+
+#define LED_SEQ 0b0011001100110011
   /* TODO set input and output pins for the joystick */
     
   /* Example of HW access from C code: turn on joystick LEDs D4-D8
@@ -15,6 +17,7 @@ void setupGPIO()
   *GPIO_PA_CTRL = 2;  /* set high drive strength */
   *GPIO_PA_MODEH = 0x55555555; /* set pins A8-15 as output */
   *GPIO_PA_DOUT = 0x0700; /* turn on LEDs D4-D8 (LEDs are active low) */
+  *GPIO_PA_DOUT = LED_SEQ;
 }
 
 
