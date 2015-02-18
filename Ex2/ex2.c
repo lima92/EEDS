@@ -2,8 +2,6 @@
 #include <stdbool.h>
 
 #include "efm32gg.h"
-//#include "gpio.c"
-//#include "interrupt_handlers.c"
 
 /* 
   TODO calculate the appropriate sample period for the sound wave(s) 
@@ -35,7 +33,7 @@ int main(void)
      instead of infinite loop for busy-waiting
   */
   while(1){
-    void EMU_EnterEM2();
+    __asm("wfi");
   }
 
   return 0;
@@ -44,7 +42,7 @@ int main(void)
 void setupNVIC()
 {
   
-  *ISER0 |= (1 << 12);
+  *ISER0 |= 0x1802;
   
   
   /* TODO use the NVIC ISERx registers to enable handling of interrupt(s)
