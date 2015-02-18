@@ -19,6 +19,9 @@ void setupGPIO()
   *GPIO_PA_DOUT = 0x0700; /* turn on LEDs D4-D8 (LEDs are active low) */
   *GPIO_PA_DOUT = LED_SEQ; /* Display fancy sequence */
 
+  *GPIO_PC_MODEL = 0x33333333;
+  *GPIO_PC_DOUT = 0xFF;
+
   *GPIO_EXTIPSELL = 0x22222222;
   *GPIO_EXTIFALL = 0xFF;
   *GPIO_IEN = 0xFF;

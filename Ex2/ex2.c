@@ -10,7 +10,7 @@
   registers are 16 bits.
 */
 /* The period between sound samples, in clock cycles */
-#define   SAMPLE_PERIOD   0xFFFF
+#define   SAMPLE_PERIOD   0x8C
 
 /* Declaration of peripheral setup functions */
 void setupTimer(uint16_t period);

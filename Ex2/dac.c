@@ -5,7 +5,7 @@
 
 void setupDAC()
 {
-	*CMU_HFPERCLKEN0 = (1 << 17);
+	*CMU_HFPERCLKEN0 |= (1 << 17);
 	*DAC0_CTRL = 0x50010;
 	*DAC0_CH0CTRL = 1;
 	*DAC0_CH1CTRL = 1;
