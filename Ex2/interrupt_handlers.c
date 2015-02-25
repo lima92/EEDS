@@ -52,18 +52,19 @@ void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler()
 void GPIO_IRQ_Handler()
 {
   *GPIO_IFC = *GPIO_IF;
+  uint16_t checker = 0x01;
   uint16_t input = *GPIO_PC_DIN;
   switch(input){
-  case(~(1 << 4)):
+  case(~(checker << 4)):
     tone=227;
     break;
-  case(~(1 << 6)):
+  case(~(checker << 6)):
     tone=202;
     break;
-  case(~(1 << 7)):
+  case(~(checker << 7)):
     tone=190;
     break;
-  case(~(1 << 8)):
+  case(~(checker << 8)):
     tone=114;
     break;
   }
