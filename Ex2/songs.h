@@ -1,7 +1,7 @@
 #include "tones.h"
 
 typedef struct Song{
-	uint8_t length;
+	uint16_t length;
 	uint8_t note[];
 	uint8_t bpm;
 } Song;
