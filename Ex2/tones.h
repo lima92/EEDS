@@ -1,3 +1,7 @@
+#define C4 382
+#define D4 341
+#define E4 303
+#define F4 286
 #define G4 255
 #define A4 227
 #define B4 202

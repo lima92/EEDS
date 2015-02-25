@@ -9,12 +9,11 @@ void GPIO_IRQ_Handler();
 Song song;
 uint16_t toneCnt = 0;
 uint16_t bpmCnt = 0;
-uint32_t tone = 44000;
+uint32_t tone;
 uint16_t volume = 0b000000100000;
 uint16_t noteNr;
-unit8_t bpm;
+uint16_t bpm;
 uint8_t beatsLeft;
- 
 
 /* TIMER1 interrupt handler */
 void __attribute__ ((interrupt)) TIMER1_IRQHandler() 
@@ -22,25 +21,25 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
   //Clear interrupt
   
   *TIMER1_IFC = 1;
-  tonecnt += 1;
-  bpmcnt += 1;
+  toneCnt += 1;
+  bpmCnt += 1;
 
-  if (toneCnt == tone]/2){
-     *DAC0_CH0DATA ^= volume;
-     *DAC0_CH1DATA ^= volume;
+  if (toneCnt == tone/2){
+    *DAC0_CH0DATA ^= volume;
+    *DAC0_CH1DATA ^= volume;
+  }else if (toneCnt == tone){
+    *DAC0_CH0DATA ^= volume;
+    *DAC0_CH1DATA ^= volume;
+    toneCnt = 0;
   }
-  if (toneCnt == tone){
-     *DAC0_CH0DATA ^= volume;
-     *DAC0_CH1DATA ^= volume;
-     toneCnt -= tone;
-  }
-  if (bpmCnt == song.bpm){
-    if(beatsLeft==0){
+  if (bpmCnt == bpm){
+    if(beatsLeft == 0){
       beatsLeft = song.note[noteNr++];
       tone = song.note[noteNr++];
     }else{
       beatsLeft--;
     }
+    bpmCnt = 0;
   }
   
 
@@ -77,7 +76,12 @@ void GPIO_IRQ_Handler()
   switch(input){
   case(sw1):
     song = LISA;
-    tone=255;
+    beatsLeft = song.note[0];
+    tone = song.note[1];
+    noteNr = 2;
+    bpm = 23334;
+    toneCnt=0;
+    bpmCnt=0;
     break;
   case(sw2):
     tone=227;
@@ -92,16 +96,18 @@ void GPIO_IRQ_Handler()
     tone=170;
     break;
   case(sw6):
-    tone=152;
+    (volume<<1);
     break;
   case(sw7):
-    tone=143;
     break;
   case(sw8):
-    tone=128;
+    (volume>>1);
+    if(volume > 0xFF){
+      volume = 0x01;
+    }
     break;
   }
-  noteNr = 1;
-  cnt=0;
+
+  
   
 }
