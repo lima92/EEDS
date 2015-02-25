@@ -77,7 +77,7 @@ case(sw7):
 tone=143;
 break;
   case(sw8):
-    tone=128;
+    tone=114;
     break;
   }
   cnt=0;
