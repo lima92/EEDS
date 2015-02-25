@@ -56,16 +56,16 @@ void GPIO_IRQ_Handler()
   uint16_t checker = 0x01;
   uint16_t input = *GPIO_PC_DIN;
   switch(input){
-  case(~(checker << 4)):
+  case(sw4):
     tone=227;
     break;
-  case(~(checker << 6)):
+  case(sw6):
     tone=202;
     break;
-  case(~(checker << 7)):
+  case(sw7):
     tone=190;
     break;
-  case(~(checker << 8)):
+  case(sw8):
     tone=114;
     break;
   }
