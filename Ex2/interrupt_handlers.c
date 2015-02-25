@@ -54,16 +54,16 @@ void GPIO_IRQ_Handler()
   *GPIO_IFC = *GPIO_IF;
   uint16_t input = *GPIO_PC_DIN;
   switch(input){
-  case(0x7F):
+  case(~(1 << 4)):
     tone=227;
     break;
-  case(0xBF):
+  case(~(1 << 6)):
     tone=202;
     break;
-  case(0xDF):
+  case(~(1 << 7)):
     tone=190;
     break;
-  case(0xF7):
+  case(~(1 << 8)):
     tone=114;
     break;
   }
