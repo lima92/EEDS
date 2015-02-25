@@ -3,10 +3,18 @@
 
 #include "efm32gg.h"
 #include "buttons.h"
+#include "songs.h"
 
 void GPIO_IRQ_Handler();
-uint16_t cnt = 0;
+Song song;
+uint16_t toneCnt = 0;
+uint16_t bpmCnt = 0;
 uint32_t tone = 44000;
+uint16_t volume = 0b000000100000;
+uint16_t noteNr;
+unit8_t bpm;
+uint8_t beatsLeft;
+ 
 
 /* TIMER1 interrupt handler */
 void __attribute__ ((interrupt)) TIMER1_IRQHandler() 
@@ -14,17 +22,29 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
   //Clear interrupt
   
   *TIMER1_IFC = 1;
-  cnt += 1;
- 
-  if (cnt == tone/2){
-     *DAC0_CH0DATA ^= 0b000010100000;
-     *DAC0_CH1DATA ^= 0b000010100000;
+  tonecnt += 1;
+  bpmcnt += 1;
+
+  if (toneCnt == tone]/2){
+     *DAC0_CH0DATA ^= volume;
+     *DAC0_CH1DATA ^= volume;
   }
-  if (cnt == tone){
-     *DAC0_CH0DATA ^= 0b000010100000;
-     *DAC0_CH1DATA ^= 0b000010100000;
-    cnt -= tone;
+  if (toneCnt == tone){
+     *DAC0_CH0DATA ^= volume;
+     *DAC0_CH1DATA ^= volume;
+     toneCnt -= tone;
   }
+  if (bpmCnt == song.bpm){
+    if(beatsLeft==0){
+      beatsLeft = song.note[noteNr++];
+      tone = song.note[noteNr++];
+    }else{
+      beatsLeft--;
+    }
+  }
+  
+
+    
   /* if ( cnt % 20 == 0){
   *DAC0_CH0DATA ^= 0b000000100000;
   *DAC0_CH1DATA ^= 0b000000100000;
@@ -56,6 +76,7 @@ void GPIO_IRQ_Handler()
   uint16_t input = *GPIO_PC_DIN;
   switch(input){
   case(sw1):
+    song = LISA;
     tone=255;
     break;
   case(sw2):
@@ -64,22 +85,23 @@ void GPIO_IRQ_Handler()
   case(sw3):
     tone=202;
     break;
-case(sw4):
-tone=191;
-break;
-case(sw5):
-tone=170;
-break;
-case(sw6):
-tone=152;
-break;
-case(sw7):
-tone=143;
-break;
+  case(sw4):
+    tone=191;
+    break;
+  case(sw5):
+    tone=170;
+    break;
+  case(sw6):
+    tone=152;
+    break;
+  case(sw7):
+    tone=143;
+    break;
   case(sw8):
     tone=128;
     break;
   }
+  noteNr = 1;
   cnt=0;
   
 }
