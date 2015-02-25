@@ -2,6 +2,7 @@
 #include <stdbool.h>
 
 #include "efm32gg.h"
+#include "buttons.h"
 
 void GPIO_IRQ_Handler();
 uint16_t cnt = 0;
