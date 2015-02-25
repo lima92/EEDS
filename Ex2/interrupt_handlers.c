@@ -64,18 +64,18 @@ void GPIO_IRQ_Handler()
   case(sw3):
     tone=202;
     break;
-case(sw4):
-tone=191;
-break;
-case(sw5):
-tone=170;
-break;
-case(sw6):
-tone=152;
-break;
-case(sw7):
-tone=143;
-break;
+  case(sw4):
+    tone=191;
+    break;
+  case(sw5):
+    tone=170;
+    break;
+  case(sw6):
+    tone=152;
+    break;
+  case(sw7):
+    tone=143;
+    break;
   case(sw8):
     tone=128;
     break;
