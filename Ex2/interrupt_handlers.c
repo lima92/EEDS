@@ -45,6 +45,7 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
     }
     toneCnt = 0;
     bpmCnt = 0;
+    *GPIO_PA_DOUT ^= 0xFFFF;
   }else if (beatsLeft==1 && bpmCnt == pause){
     tone=0xFFFFFFFF;
   }
