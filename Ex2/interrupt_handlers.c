@@ -6,20 +6,24 @@
 #include "songs.h"
 
 void GPIO_IRQ_Handler();
+void PlaySong(Song songArg);
 Song song;
 uint16_t toneCnt = 0;
 uint16_t bpmCnt = 0;
 uint32_t tone;
+uint16_t halftone;
 uint16_t volume = 0b000000100000;
 uint16_t noteNr;
 uint16_t bpm;
+uint16_t pause;
 uint8_t beatsLeft;
 
 /* TIMER1 interrupt handler */
 void __attribute__ ((interrupt)) TIMER1_IRQHandler() 
 {  
   //Clear interrupt
-  
+ 
+
   *TIMER1_IFC = 1;
   toneCnt += 1;
   bpmCnt += 1;
@@ -33,13 +37,16 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
     toneCnt = 0;
   }
   if (bpmCnt == bpm){
-    if(beatsLeft == 0){
+    if(beatsLeft == 1){
       beatsLeft = song.note[noteNr++];
       tone = song.note[noteNr++];
     }else{
       beatsLeft--;
     }
+    toneCnt = 0;
     bpmCnt = 0;
+  }else if (beatsLeft==1 && bpmCnt == pause){
+    tone=0xFFFFFFFF;
   }
   
 
@@ -79,7 +86,8 @@ void GPIO_IRQ_Handler()
     beatsLeft = song.note[0];
     tone = song.note[1];
     noteNr = 2;
-    bpm = 23334;
+    bpm = 34334;
+    pause = bpm - 2000;
     toneCnt=0;
     bpmCnt=0;
     break;
@@ -96,18 +104,27 @@ void GPIO_IRQ_Handler()
     tone=170;
     break;
   case(sw6):
-    (volume<<1);
+    volume = (volume<<1);
     break;
   case(sw7):
     break;
   case(sw8):
-    (volume>>1);
-    if(volume > 0xFF){
-      volume = 0x01;
-    }
+    volume = (volume>>1);
+    if(volume == 0)
+      volume = 1;
     break;
   }
+  
+  
+}
 
-  
-  
+void PlaySong(Song songArg){
+    song = songArg;
+    beatsLeft = song.note[0];
+    tone = song.note[1];
+    noteNr = 2;
+    bpm = 44334;
+    pause = bpm - 300;
+    toneCnt=0;
+    bpmCnt=0;
 }
