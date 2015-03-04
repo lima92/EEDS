@@ -7,17 +7,20 @@
 
 void GPIO_IRQ_Handler();
 void PlaySong();
+void stopTimer();
+void startTimer();
 
-Song song;
+Song *song;
+uint16_t lengdeee;
 uint16_t toneCnt = 0;
 uint16_t bpmCnt = 0;
-uint32_t tone;
-uint16_t halftone;
+uint16_t tone;
 uint16_t volume = 0b000000100000;
 uint16_t noteNr;
 uint16_t bpm;
 uint16_t pause;
-uint8_t beatsLeft;
+uint16_t beatsLeft;
+
 
 /* TIMER1 interrupt handler */
 void __attribute__ ((interrupt)) TIMER1_IRQHandler() 
@@ -39,17 +42,21 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
   }
   if (bpmCnt == bpm){
     if(beatsLeft == 1){
-      beatsLeft = song.note[noteNr++];
-      tone = song.note[noteNr++];
+      beatsLeft = song->note[noteNr++];
+      tone = song->note[noteNr++];
+      if(noteNr > song->length){
+	//stopTimer();
+      }
     }else{
       beatsLeft--;
     }
     toneCnt = 0;
     bpmCnt = 0;
-    *GPIO_PA_DOUT ^= 0xFFFF;
+    //*GPIO_PA_DOUT ^= 0xFFFF;
   }else if (beatsLeft==1 && bpmCnt == pause){
     tone=10000;
   }
+
   
 
     
@@ -84,18 +91,20 @@ void GPIO_IRQ_Handler()
   uint16_t input = *GPIO_PC_DIN;
   switch(input){
   case(sw1):
-    song = LISA;
+    song = &LISA;
     PlaySong();
     break;
   case(sw2):
-    song = STAR_WARS;
+    song = &STAR_WARS;
     PlaySong();
     break;
   case(sw3):
-    tone=202;
+    song = &MARIO_COIN;
+    PlaySong();
     break;
   case(sw4):
-    tone=191;
+    song = &MARIO_1_UP;
+    PlaySong();
     break;
   case(sw5):
     tone=170;
@@ -104,6 +113,7 @@ void GPIO_IRQ_Handler()
     volume = (volume<<1);
     break;
   case(sw7):
+    stopTimer();
     break;
   case(sw8):
     volume = (volume>>1);
@@ -116,11 +126,17 @@ void GPIO_IRQ_Handler()
 }
 
 void PlaySong(){
-    beatsLeft = song.note[0];
-    tone = song.note[1];
-    noteNr = 2;
-    bpm = 6562500/song.bpm;
-    pause = bpm - 300;
-    toneCnt=0;
-    bpmCnt=0;
+  lengdeee = song->length;
+  *GPIO_PA_DOUT=(lengdeee<<8);
+  beatsLeft = song->note[0];
+  tone = song->note[1];
+  noteNr = 2;
+  bpm = 6000000/song->bpm;
+  pause = bpm - 300;
+  toneCnt=0;
+  bpmCnt=0;
+  *SCR &= 0xFFFFFFFB;
+  startTimer();
 }
+
+

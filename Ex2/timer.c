@@ -16,7 +16,7 @@ void setupTimer(uint16_t period)
   *TIMER1_CMD = 1;
 
   //Prescale clock
-  *CMU_HFPERCLKDIV |= 7;
+  *CMU_HFPERCLKDIV |= 0;
   
   /*
     TODO enable and set up the timer
@@ -28,6 +28,19 @@ void setupTimer(uint16_t period)
     
     This will cause a timer interrupt to be generated every (period) cycles. Remember to configure the NVIC as well, otherwise the interrupt handler will not be invoked.
   */  
+}
+
+void stopTimer(){
+  *TIMER1_IFC = 1;
+  *TIMER1_IEN = 0;
+  *TIMER1_CMD = 0b10;
+  *SCR |= 0b100;
+  *GPIO_PA_DOUT ^= 0xFF00;
+}
+
+void startTimer(){
+  *TIMER1_IEN = 1;
+  *TIMER1_CMD = 0b1;
 }
 
 
