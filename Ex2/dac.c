@@ -19,3 +19,13 @@ void setupDAC()
     4. Write a continuous stream of samples to the DAC data registers, DAC0_CH0DATA and DAC0_CH1DATA, for example from a timer interrupt
   */
 }
+
+void enableDAC(){
+  *DAC0_CH0CTRL |= 0b1;
+  *DAC0_CH1CTRL |= 0b1;
+}
+
+void disableDAC(){
+  *DAC0_CH0CTRL &= 0xFFFFFFFE;
+  *DAC0_CH1CTRL &= 0xFFFFFFFE;
+}
