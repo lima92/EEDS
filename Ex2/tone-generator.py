@@ -8,6 +8,8 @@ def generate_tones():
 	A1 = 55
 	tones[0] = A1
 
+	interrupts_per_sec = 14000000/128
+
 	#12th root of 2
 	tone_increment = 1.05946309436
 
@@ -15,7 +17,7 @@ def generate_tones():
 		tones[i + 1] = tones[i]*tone_increment
 
 	for i in range(len(tones)):
-		tones[i] = int(100000 / tones[i])
+		tones[i] = int(interrupts_per_sec / tones[i])
 
 	return tones
 
@@ -42,5 +44,6 @@ def main():
 	a = generate_c_code(a)
 	for line in a:
 		print line
+
 
 main()
