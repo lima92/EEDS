@@ -119,7 +119,7 @@ void PlaySong(){
     beatsLeft = song.note[0];
     tone = song.note[1];
     noteNr = 2;
-    bpm = 6562500/song.bpm;
+    bpm = 6000000/song.bpm;
     pause = bpm - 300;
     toneCnt=0;
     bpmCnt=0;

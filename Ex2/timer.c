@@ -14,6 +14,9 @@ void setupTimer(uint16_t period)
   *TIMER1_IEN = 1;
  
   *TIMER1_CMD = 1;
+
+  //Prescale clock
+  *CMU_HFPERCLKDIV |= 7;
   
   /*
     TODO enable and set up the timer
