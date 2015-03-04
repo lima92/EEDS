@@ -42,5 +42,6 @@ def main():
 	a = generate_c_code(a)
 	for line in a:
 		print line
+	
 
 main()
