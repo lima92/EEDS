@@ -8,7 +8,7 @@ def generate_tones():
 	A1 = 55
 	tones[0] = A1
 
-	interrupts_per_sec = 14000000/128
+	interrupts_per_sec = 100000
 
 	#12th root of 2
 	tone_increment = 1.05946309436
