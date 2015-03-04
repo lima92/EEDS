@@ -45,7 +45,7 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
       beatsLeft = song->note[noteNr++];
       tone = song->note[noteNr++];
       if(noteNr > song->length){
-	//stopTimer();
+	stopTimer();
       }
     }else{
       beatsLeft--;
