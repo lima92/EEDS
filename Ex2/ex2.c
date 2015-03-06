@@ -17,10 +17,12 @@ void setupTimer(uint16_t period);
 void setupDAC();
 void setupNVIC();
 void setupGPIO();
+void init();
 
 /* Your code will start executing here */
 int main(void) 
-{  
+{
+  //init();  
   /* Call the peripheral setup functions */
   setupGPIO();
   setupDAC();
@@ -41,7 +43,7 @@ int main(void)
 
 void init(){
   //Shut down SRAM-blocks 1-3
-  *EMU_MEMCTRL = 0b111;
+  *EMU_MEMCTRL = 4;
 }
 
 void setupNVIC()
