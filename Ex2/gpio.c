@@ -22,6 +22,8 @@ void setupGPIO()
   *GPIO_PC_MODEL = 0x33333333;
   *GPIO_PC_DOUT = 0xFF;
 
+  *CMU_HFPERCLKDIV |= 0b0101; /* Set the peripheral clock to clock/32 */
+
   *GPIO_EXTIPSELL = 0x22222222;
   *GPIO_EXTIFALL = 0xFF;
   *GPIO_IEN = 0xFF;
