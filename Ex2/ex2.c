@@ -39,6 +39,11 @@ int main(void)
   return 0;
 }
 
+void init(){
+  //Shut down SRAM-blocks 1-3
+  *EMU_MEMCTRL = 0b111;
+}
+
 void setupNVIC()
 {
   
