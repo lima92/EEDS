@@ -25,25 +25,24 @@ uint16_t pause;
 uint16_t beatsLeft;
 
 
+
+
 /* TIMER1 interrupt handler */
 void __attribute__ ((interrupt)) TIMER1_IRQHandler() 
 {  
   //Clear interrupt
 
   *TIMER1_IFC = 1;
-  toneCnt += 1;
-  bpmCnt += 1;
+  // toneCnt += 1;
+  //bpmCnt += 1;
+  
 
 
-
-  if (toneCnt == tone/2){
+  if (toneCnt == tone){
     *DAC0_CH0DATA ^= volume;
     *DAC0_CH1DATA ^= volume;
-  }else if (toneCnt == tone){
-    *DAC0_CH0DATA ^= volume;
-    *DAC0_CH1DATA ^= volume;
-    toneCnt = 0;
   }
+
   if (bpmCnt == bpm){
     if(beatsLeft == 1){
       beatsLeft = song->note[noteNr++];
