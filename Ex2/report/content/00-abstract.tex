@@ -1,0 +1,36 @@
+\begin{abstract}
+An abstract is a short (100 to 500 words), high-level summary of the entire document. 
+For this kind of report, you would start by introducing the concept that the report talks about and the goals of the work, followed by information about how the work was done and some summary of results.
+
+This report is a hands-on approach towards learning energy efficient programming using primarily the C language. The work is done on the EFM32GG-DK3750 microcontroller from Silicon Labs, but it is applicable for programming other types of microcontrollers as well. This report describes how to utilize the on-board DAC in order to make music and sound effects, but still maintaining a low energy consumption. It is desirable to keeping the energy consumption low for a lot of reasons. Microcontrollers are used in lot of energy-sensitive areas, often battery powered, like implantable medical devices, remote controls and toys, so you want to increase their life time by decreasing the energy usage.
+
+NEEDS TO BE WRITTEN WHEN WE HAVE RESULTS!!!
+
+On RUNNING
+\begin{itemize}
+\item (Tried to down-scale, but dropped due to sound quality)
+\item Reduced interrupt-frequency
+\item EM1 (gets rid of 200 interrupts per note)
+\end{itemize}
+
+On IDLE
+\begin{itemize}
+\item Turned off DAC
+\item Turned off Timer
+\item EM2 (WFI)
+\end{itemize}
+
+Generated tones beforehand, so we didn't need to do a lot of heavy divisions for each boot.
+Used shifting in stead of multiplication/division.
+Decided using integers instead of floats for the tones.
+
+TRY
+Update linker script when disabling RAM-blocks
+32.5.1 GPIO_Px_CTRL - Port Control Register
+11.5.3 CMU_HFPERCLKDIV - High Frequency Peripheral Clock Division
+Register
+
+COULD TRY
+Decrease voltage
+
+\end{abstract}
