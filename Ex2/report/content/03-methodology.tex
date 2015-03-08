@@ -53,15 +53,29 @@ Then we enable high drive strength and set pin 8 to 15 as output, on Port A, for
 Finally we enable interrupt on button presses.
 
 \subsubsection{DAC}
-Next we set up the DAC. We need the high peripheral clock to drive this as well. 
+Next we set up the DAC. We need the high peripheral clock to drive this as well. So we write to to bit number 17 in CMU\_HFPERCLKEN0. We want sound in both left and right speaker, so DAC0\_CH0CTRL and DAC0\_CH0CTRL is set to 1.
+
+\subsubsection{Timer}
+\label{sec:timer}
+The timer is also driven by the high peripheral clock. Bit 6 is set to enable this. After this, TIMER1\_TOP is set to 140. This will make the timer count to 140, and then restart at 0. We enable interrupt on this event.
+
+\subsubsection{NVIC}
+The Nested Vector Interrupt Controller handles the interrupts from the different components on the board. In this implementation we need to handle interrupts from three different sources; GPIO\_ODD, GPIO\_EVEN and TIMER1. To do this we simply write 1 to their respecive bits in the ISER0 register found in \citep{interrupt}
 
 \subsection{Generating sound}
 \label{sec:generating}
 Our next goal was to get a simple tone playing. As explained in section \ref{sec:dac} sound is moving air. To get the 440Hz tone we wanted, we need to change the value in the DAC 880 times per second. This makes a square pulse with a period of 440Hz.
 To make this happen, we made use of the timer explained in section
-\ref{sec:timer}. We sat TIMER1\_TOP to 140, which gave us 100000 interrupts per second.
-In the interrupt handler we used two counters one to keep track of when to feed a new value to the DAC, and one for when to change the tone.
+\ref{sec:timer}. We sat TIMER1\_TOP to 140, as mentioned in \ref{sec:timer}, which gave us 100000 interrupts per second. This is because the clock that drives the timer runs at 14Mhz.
+
+\begin{center}
+$14000000Hz/140=100000Hz$
+\end{center}
+
+In the interrupt handler we used two counters. One to keep track of when to feed a new value to the DAC, and one for when to change the tone.
 We used a tone generator script written in python \ref{app:py} to generate a header file with the values for each tone. These values indicates how many interrupts there should be between each time we feed a new value to the DAC.
+
+Since we use square waves, there is no need to sample a sine wave and feed different values to the DAC. We simply write voltage/no-voltage. The voltage is defined is a volume variable, which is XORed to the DAC at every half period. 
 
 \subsubsection{}
 

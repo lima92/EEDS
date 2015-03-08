@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2014.1.29)  8 MAR 2015 12:49
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2014.1.29)  8 MAR 2015 13:20
 entering extended mode
 **main.tex
 (C:\Users\Anders\NTNU\EEDS\Ex2\report\main.tex
@@ -443,7 +443,23 @@ File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
 Package color Info: Driver file: pdftex.def on input line 130.
 )
 (C:\Users\Anders\NTNU\EEDS\Ex2\report\meta.tex)
-No file main.aux.
+(C:\Users\Anders\NTNU\EEDS\Ex2\report\main.aux
+
+LaTeX Warning: Label `cycle-formula' multiply defined.
+
+
+LaTeX Warning: Label `sec:timer' multiply defined.
+
+
+LaTeX Warning: Label `code:python' multiply defined.
+
+
+LaTeX Warning: Label `code:python' multiply defined.
+
+
+LaTeX Warning: Label `code:python' multiply defined.
+
+)
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 45.
 LaTeX Font Info:    ... okay on input line 45.
 LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 45.
@@ -457,7 +473,7 @@ LaTeX Font Info:    ... okay on input line 45.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 45.
 LaTeX Font Info:    ... okay on input line 45.
 \c@lstlisting=\count111
-("E:\Program Files (x86)\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
+ ("E:\Program Files (x86)\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count112
 \scratchdimen=\dimen118
@@ -547,14 +563,8 @@ Class scrreprt Warning: \float@addtolists detected!
 ]
 Chapter 2.
 
-LaTeX Warning: Reference `fig:devboard' on page 4 undefined on input line 6.
-
-
 Package natbib Warning: Citation `cortexm3' on page 4 undefined on input line 6
 .
-
-
-LaTeX Warning: Reference `fig:gamepad' on page 4 undefined on input line 26.
 
 [4
 
@@ -573,15 +583,6 @@ Package pdftex.def Info: images/gamepad.jpg used on input line 37.
 
 [5 <C:/Users/Anders/NTNU/EEDS/Ex2/report/images/EFM32GG-DK3750.jpg>] [6 <C:/Use
 rs/Anders/NTNU/EEDS/Ex2/report/images/gamepad.jpg>]
-
-LaTeX Warning: Reference `fig:em' on page 7 undefined on input line 73.
-
-
-LaTeX Warning: Reference `fig:em2' on page 7 undefined on input line 73.
-
-
-LaTeX Warning: Reference `fig:em' on page 7 undefined on input line 73.
-
 <images/em.png, id=41, 658.46pt x 412.54124pt>
 File: images/em.png Graphic file (type png)
  <use images/em.png>
@@ -603,19 +604,9 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 Package natbib Warning: Citation `wolf2012computers' on page 8 undefined on inp
 ut line 103.
 
-
-LaTeX Warning: Reference `sec:static' on page 8 undefined on input line 106.
-
 ) (C:\Users\Anders\NTNU\EEDS\Ex2\report\content/03-methodology.tex [8 <C:/Users
 /Anders/NTNU/EEDS/Ex2/report/images/em_numbers.png>]
 Chapter 3.
-
-LaTeX Warning: Reference `code:structure' on page 9 undefined on input line 6.
-
-
-LaTeX Warning: Reference `sec:generating' on page 9 undefined on input line 29.
-
-
 ! Missing $ inserted.
 <inserted text> 
                 $
@@ -645,20 +636,15 @@ chisalsothecodethatactuallyplaysthesound:$
 
 Package natbib Warning: Citation `ex1' on page 10 undefined on input line 46.
 
+[10]
 
-LaTeX Warning: Reference `sec:dac' on page 10 undefined on input line 60.
+LaTeX Warning: Reference `app:py' on page 11 undefined on input line 72.
 
-
-LaTeX Warning: Reference `sec:timer' on page 10 undefined on input line 62.
-
-
-LaTeX Warning: Reference `app:py' on page 10 undefined on input line 64.
-
-[10] <images/Idle_preEF.PNG, id=62, 257.46187pt x 173.14688pt>
+<images/Idle_preEF.PNG, id=62, 257.46187pt x 173.14688pt>
 File: images/Idle_preEF.PNG Graphic file (type png)
 
 <use images/Idle_preEF.PNG>
-Package pdftex.def Info: images/Idle_preEF.PNG used on input line 76.
+Package pdftex.def Info: images/Idle_preEF.PNG used on input line 84.
 (pdftex.def)             Requested size: 257.46123pt x 173.14645pt.
 )
 (C:\Users\Anders\NTNU\EEDS\Ex2\report\content/04-results.tex [11 <C:/Users/Ande
@@ -697,13 +683,13 @@ Package natbib Warning: There were undefined citations.
 LaTeX Warning: There were undefined references.
 
 
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 5878 strings out of 493921
- 83872 string characters out of 3144873
- 300852 words of memory out of 3000000
+ 5880 strings out of 493921
+ 83962 string characters out of 3144873
+ 301059 words of memory out of 3000000
  9074 multiletter control sequences out of 15000+200000
  11497 words of font info for 42 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
@@ -723,7 +709,7 @@ x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr8.pfb><E:/Program Files (x86)
 iKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti12.pfb><E:/Program Files (x86)/MiK
 TeX 2.9/fonts/type1/public/amsfonts/cm/cmtt10.pfb><E:/Program Files (x86)/MiKTe
 X 2.9/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
-Output written on main.pdf (20 pages, 1749507 bytes).
+Output written on main.pdf (20 pages, 1750247 bytes).
 PDF statistics:
  144 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
