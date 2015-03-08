@@ -10,7 +10,7 @@
   registers are 16 bits.
 */
 /* The period between sound samples, in clock cycles */
-#define   SAMPLE_PERIOD   140
+#define   SAMPLE_PERIOD   140  
 
 /* Declaration of peripheral setup functions */
 void setupTimer(uint16_t period);
@@ -18,11 +18,12 @@ void setupDAC();
 void setupNVIC();
 void setupGPIO();
 void init();
+void stop();
 
 /* Your code will start executing here */
 int main(void) 
 {
-  //init();  
+  init();  
   /* Call the peripheral setup functions */
   setupGPIO();
   setupDAC();
@@ -34,6 +35,8 @@ int main(void)
   /* TODO for higher energy efficiency, sleep while waiting for interrupts
      instead of infinite loop for busy-waiting
   */
+  stop();
+
   while(1){
      __asm("wfi");
   }
@@ -43,7 +46,7 @@ int main(void)
 
 void init(){
   //Shut down SRAM-blocks 1-3
-  *EMU_MEMCTRL = 4;
+  *EMU_MEMCTRL = 7;
 }
 
 void setupNVIC()
