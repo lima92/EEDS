@@ -5,6 +5,8 @@
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/init.h>
+#include <linux/ioport.h>
+#include <efm32gg.h>
 
 /*
  * template_init - function to insert this module into kernel space
@@ -15,9 +17,18 @@
  * Returns 0 if successfull, otherwise -1
  */
 
+#define uint_32t *err;
+
 static int __init template_init(void)
 {
 	printk("Hello World, here is your module speaking\n");
+	*err = request_mem_region(GPIO_PC_BASE + GPIO_PC_DIN, 32, "GPIO IN");
+	if (*err == NULL){
+		printk("Failure");
+	}
+	else{
+		printk("GPIO INPUT SUCCESS");
+	}
 	return 0;
 }
 
@@ -30,7 +41,8 @@ static int __init template_init(void)
 
 static void __exit template_cleanup(void)
 {
-	 printk("Short life for a small module...\n");
+	release_mem_region(GPIO_PC_BASE + GPIO_PC_DIN, 32);
+	printk("Short life for a small module...\n");
 }
 
 module_init(template_init);
