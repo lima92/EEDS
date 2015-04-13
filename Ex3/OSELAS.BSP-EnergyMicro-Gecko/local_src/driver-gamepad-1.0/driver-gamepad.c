@@ -19,6 +19,8 @@
  * Returns 0 if successfull, otherwise -1
  */
 
+void setup_GPIO();
+
 uint32_t *err;
 uint32_t *ioremap;
 
@@ -37,7 +39,7 @@ static int __init template_init(void)
 	}
 
 	setup_GPIO();
-	
+
 	return 0;
 }
 
