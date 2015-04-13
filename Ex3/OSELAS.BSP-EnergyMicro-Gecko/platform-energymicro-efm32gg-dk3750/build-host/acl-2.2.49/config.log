@@ -27,10 +27,10 @@ uname -v = #57~precise1-Ubuntu SMP Tue Jul 15 03:50:54 UTC 2014
 /usr/bin/oslevel       = unknown
 /bin/universe          = unknown
 
-PATH: /home/tdt4258/Desktop/OSELAS.BSP-EnergyMicro-Gecko/platform-energymicro-efm32gg-dk3750/sysroot-host/lib/wrapper
-PATH: /home/tdt4258/Desktop/OSELAS.BSP-EnergyMicro-Gecko/platform-energymicro-efm32gg-dk3750/sysroot-host/bin
-PATH: /home/tdt4258/Desktop/OSELAS.BSP-EnergyMicro-Gecko/platform-energymicro-efm32gg-dk3750/sysroot-host/sbin
-PATH: /home/tdt4258/Desktop/OSELAS.BSP-EnergyMicro-Gecko/selected_toolchain
+PATH: /home/tdt4258/Desktop/EEDS/Ex3/OSELAS.BSP-EnergyMicro-Gecko/platform-energymicro-efm32gg-dk3750/sysroot-host/lib/wrapper
+PATH: /home/tdt4258/Desktop/EEDS/Ex3/OSELAS.BSP-EnergyMicro-Gecko/platform-energymicro-efm32gg-dk3750/sysroot-host/bin
+PATH: /home/tdt4258/Desktop/EEDS/Ex3/OSELAS.BSP-EnergyMicro-Gecko/platform-energymicro-efm32gg-dk3750/sysroot-host/sbin
+PATH: /home/tdt4258/Desktop/EEDS/Ex3/OSELAS.BSP-EnergyMicro-Gecko/selected_toolchain
 PATH: /opt/ex3/ptxdist-2013/lib/ptxdist-2013.07.1/bin
 PATH: /usr/lib/lightdm/lightdm
 PATH: /usr/local/sbin
@@ -42,7 +42,7 @@ PATH: /bin
 PATH: /usr/games
 PATH: /opt/ex3/ptxdist/bin
 PATH: /opt/codesourcery/bin
-PATH: opt/profiler
+PATH: /opt/profiler
 PATH: /opt/eACommander
 PATH: /opt/ex3/OSELAS.Toolchain-2012.12.0/arm-cortexm3-uclinuxeabi/gcc-4.7.2-uclibc-0.9.33.2-binutils-2.22-kernel-3.6-sanitized/bin
 
@@ -56,7 +56,7 @@ configure:2100: result: i686-pc-linux-gnu
 configure:2122: checking host system type
 configure:2137: result: i686-pc-linux-gnu
 configure:2207: checking for gcc
-configure:2223: found /home/tdt4258/Desktop/OSELAS.BSP-EnergyMicro-Gecko/platform-energymicro-efm32gg-dk3750/sysroot-host/lib/wrapper/gcc
+configure:2223: found /home/tdt4258/Desktop/EEDS/Ex3/OSELAS.BSP-EnergyMicro-Gecko/platform-energymicro-efm32gg-dk3750/sysroot-host/lib/wrapper/gcc
 configure:2234: result: gcc
 configure:2466: checking for C compiler version
 configure:2474: gcc --version >&5
@@ -68,7 +68,7 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 configure:2478: $? = 0
 configure:2485: gcc -v >&5
 Using built-in specs.
-COLLECT_GCC=/home/tdt4258/Desktop/OSELAS.BSP-EnergyMicro-Gecko/platform-energymicro-efm32gg-dk3750/sysroot-host/lib/wrapper/real/gcc
+COLLECT_GCC=/home/tdt4258/Desktop/EEDS/Ex3/OSELAS.BSP-EnergyMicro-Gecko/platform-energymicro-efm32gg-dk3750/sysroot-host/lib/wrapper/real/gcc
 COLLECT_LTO_WRAPPER=/usr/lib/gcc/i686-linux-gnu/4.6/lto-wrapper
 Target: i686-linux-gnu
 Configured with: ../src/configure -v --with-pkgversion='Ubuntu/Linaro 4.6.3-1ubuntu5' --with-bugurl=file:///usr/share/doc/gcc-4.6/README.Bugs --enable-languages=c,c++,fortran,objc,obj-c++ --prefix=/usr --program-suffix=-4.6 --enable-shared --enable-linker-build-id --with-system-zlib --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --with-gxx-include-dir=/usr/include/c++/4.6 --libdir=/usr/lib --enable-nls --with-sysroot=/ --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --enable-gnu-unique-object --enable-plugin --enable-objc-gc --enable-targets=all --disable-werror --with-arch-32=i686 --with-tune=generic --enable-checking=release --build=i686-linux-gnu --host=i686-linux-gnu --target=i686-linux-gnu
@@ -297,7 +297,7 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 configure:10727: $? = 0
 configure:10734: gcc -v >&5
 Using built-in specs.
-COLLECT_GCC=/home/tdt4258/Desktop/OSELAS.BSP-EnergyMicro-Gecko/platform-energymicro-efm32gg-dk3750/sysroot-host/lib/wrapper/real/gcc
+COLLECT_GCC=/home/tdt4258/Desktop/EEDS/Ex3/OSELAS.BSP-EnergyMicro-Gecko/platform-energymicro-efm32gg-dk3750/sysroot-host/lib/wrapper/real/gcc
 COLLECT_LTO_WRAPPER=/usr/lib/gcc/i686-linux-gnu/4.6/lto-wrapper
 Target: i686-linux-gnu
 Configured with: ../src/configure -v --with-pkgversion='Ubuntu/Linaro 4.6.3-1ubuntu5' --with-bugurl=file:///usr/share/doc/gcc-4.6/README.Bugs --enable-languages=c,c++,fortran,objc,obj-c++ --prefix=/usr --program-suffix=-4.6 --enable-shared --enable-linker-build-id --with-system-zlib --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --with-gxx-include-dir=/usr/include/c++/4.6 --libdir=/usr/lib --enable-nls --with-sysroot=/ --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --enable-gnu-unique-object --enable-plugin --enable-objc-gc --enable-targets=all --disable-werror --with-arch-32=i686 --with-tune=generic --enable-checking=release --build=i686-linux-gnu --host=i686-linux-gnu --target=i686-linux-gnu
@@ -327,7 +327,7 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 configure:11444: $? = 0
 configure:11451: gcc -v >&5
 Using built-in specs.
-COLLECT_GCC=/home/tdt4258/Desktop/OSELAS.BSP-EnergyMicro-Gecko/platform-energymicro-efm32gg-dk3750/sysroot-host/lib/wrapper/real/gcc
+COLLECT_GCC=/home/tdt4258/Desktop/EEDS/Ex3/OSELAS.BSP-EnergyMicro-Gecko/platform-energymicro-efm32gg-dk3750/sysroot-host/lib/wrapper/real/gcc
 COLLECT_LTO_WRAPPER=/usr/lib/gcc/i686-linux-gnu/4.6/lto-wrapper
 Target: i686-linux-gnu
 Configured with: ../src/configure -v --with-pkgversion='Ubuntu/Linaro 4.6.3-1ubuntu5' --with-bugurl=file:///usr/share/doc/gcc-4.6/README.Bugs --enable-languages=c,c++,fortran,objc,obj-c++ --prefix=/usr --program-suffix=-4.6 --enable-shared --enable-linker-build-id --with-system-zlib --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --with-gxx-include-dir=/usr/include/c++/4.6 --libdir=/usr/lib --enable-nls --with-sysroot=/ --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --enable-gnu-unique-object --enable-plugin --enable-objc-gc --enable-targets=all --disable-werror --with-arch-32=i686 --with-tune=generic --enable-checking=release --build=i686-linux-gnu --host=i686-linux-gnu --target=i686-linux-gnu
