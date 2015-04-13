@@ -19,8 +19,8 @@
  * Returns 0 if successfull, otherwise -1
  */
 
-#define uint_32t *err;
-#define uint_32t *ioremap;
+uint32_t *err;
+uint32_t *ioremap;
 
 static int __init template_init(void)
 {
