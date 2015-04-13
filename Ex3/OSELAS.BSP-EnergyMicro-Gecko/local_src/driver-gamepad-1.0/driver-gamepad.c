@@ -25,8 +25,8 @@
 static int __init template_init(void)
 {
 	printk("Hello World, here is your module fucking\n");
-	*err = request_mem_region(GPIO_PC_BASE + GPIO_PC_DIN, 32, "GPIO IN");
-	*ioremap = ioremap_nocache(GPIO_PC_BASE + GPIO_PC_DIN, 32);
+	*err = request_mem_region(GPIO_PC_DIN, 32, "GPIO IN");
+	*ioremap = ioremap_nocache(GPIO_PC_DIN, 32);
 	if (*err == NULL){
 		printk("Failure\n");
 	}
