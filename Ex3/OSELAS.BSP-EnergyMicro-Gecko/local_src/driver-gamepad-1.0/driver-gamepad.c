@@ -8,10 +8,7 @@
 #include <linux/ioport.h>
 #include <linux/io.h>
 
-#include <efm32gg.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include <buttons.h>
+#include "efm32gg.h"
 
 /*
  * template_init - function to insert this module into kernel space
@@ -42,15 +39,15 @@ static int __init template_init(void)
 void setup_GPIO()
 {
 	iowrite32(0x33333333, GPIO_PC_MODEL);
-  //*GPIO_PC_MODEL = 0x33333333;
+  //GPIO_PC_MODEL = 0x33333333;
 	iowrite32(0xff, GPIO_PC_DOUT);
-  //*GPIO_PC_DOUT = 0xFF;
+  //GPIO_PC_DOUT = 0xFF;
 	iowrite32(0x22222222, GPIO_EXTIPSELL);
-  //*GPIO_EXTIPSELL = 0x22222222;
+  //GPIO_EXTIPSELL = 0x22222222;
 	iowrite32(0xff, GPIO_EXTIFALL);
-  //*GPIO_EXTIFALL = 0xFF;
+  //GPIO_EXTIFALL = 0xFF;
 	iowrite32(0xff, GPIO_IEN);
-  //*GPIO_IEN = 0xFF;
+  //GPIO_IEN = 0xFF;
 }
 
 /*
