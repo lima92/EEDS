@@ -6,7 +6,11 @@
 #include <linux/module.h>
 #include <linux/init.h>
 #include <linux/ioport.h>
+
 #include <efm32gg.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <buttons.h>
 
 /*
  * template_init - function to insert this module into kernel space
@@ -21,15 +25,25 @@
 
 static int __init template_init(void)
 {
-	printk("Hello World, here is your module speaking\n");
+	printk("Hello World, here is your module fucking\n");
 	*err = request_mem_region(GPIO_PC_BASE + GPIO_PC_DIN, 32, "GPIO IN");
 	if (*err == NULL){
-		printk("Failure");
+		printk("Failure\n");
 	}
 	else{
-		printk("GPIO INPUT SUCCESS");
+		printk("GPIO INPUT SUCCESS\n");
 	}
 	return 0;
+}
+
+void setup_GPIO()
+{
+  *GPIO_PC_MODEL = 0x33333333;
+  *GPIO_PC_DOUT = 0xFF;
+
+  *GPIO_EXTIPSELL = 0x22222222;
+  *GPIO_EXTIFALL = 0xFF;
+  *GPIO_IEN = 0xFF;
 }
 
 /*
