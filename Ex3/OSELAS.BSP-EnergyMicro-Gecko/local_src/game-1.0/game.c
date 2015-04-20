@@ -13,12 +13,14 @@ int get_random_int(int min, int max);
 typedef enum {LEFT = 0, RIGHT = 1} directions;
 
 typedef struct tuple{
-	int x;
-	int y;
+	int head_x;
+	int head_y;
+	int tail_x;
+	int tail_y;
 };
 
 //Global variables
-tuple p1_start_position, p2_start_position;
+tuple *p1, *p2;
 
 int main(int argc, char *argv[])
 {
@@ -30,23 +32,27 @@ int main(int argc, char *argv[])
 
 
 void init_game(){
-	p1_start_position = {get_random_int(3, SCREEN_WIDTH / 2), get_random_int(3, SCREEN_HEIGHT / 2)};
+	*p1 = {get_random_int(3, SCREEN_WIDTH / 2), get_random_int(3, SCREEN_HEIGHT / 2), 0, 0};
 
-	if (p1_start_position.x % 4 == 2){
-		p1_start_position.x++;
+	if (*p1.head_x % 4 == 2){
+		*p1.head_x++;
 	}
-	if (p1_start_position.y % 4 == 2){
-		p1_start_position.y++;
+	if (*p1.head_y % 4 == 2){
+		*p1.head_y++;
 	}
+	*p1.tail_x = *p1.head_x;
+	*p1.tail_y = *p1.head_y;
 
-	p2_start_position = {get_random_int(SCREEN_WIDTH / 2, SCREEN_WIDTH - 3), get_random_int(SCREEN_HEIGHT / 2, SCREEN_HEIGHT - 3)};
+	*p2 = {get_random_int(SCREEN_WIDTH / 2, SCREEN_WIDTH - 3), get_random_int(SCREEN_HEIGHT / 2, SCREEN_HEIGHT - 3), 0, 0};
 
-	if (p2_start_position.x % 4 == 2){
-		p2_start_position.x--;
+	if (*p2.head_x % 4 == 2){
+		*p2.head_x--;
 	}
-	if (p2_start_position.y % 4 == 2){
-		p2_start_position.y--;
+	if (*p2.head_y % 4 == 2){
+		*p2.head_y--;
 	}
+	*p2.tail_x = *p2.head_x;
+	*p2.tail_y = *p2.head_y;
 }
 
 int get_random_int(int min, int max){
