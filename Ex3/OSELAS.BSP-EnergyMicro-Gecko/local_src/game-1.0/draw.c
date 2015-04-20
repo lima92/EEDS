@@ -6,6 +6,7 @@
 #include <sys/ioctl.h> 	// ioctl()
 #include <fcntl.h> 		// open()
 #include "draw.h"
+#include "fonts.h"
 
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 240
@@ -24,15 +25,7 @@ void draw_pixel(int x, int y, uint16_t color);
 void draw_row(int row, uint16_t color);
 void draw_init();
 void draw_letter(int letter[7][5], int size, int x, int y, uint16_t color);
-int _char_B[7][5] = {
-	{1,1,1,1,0},
-	{1,0,0,0,1},
-	{1,0,0,0,1},
-	{1,1,1,1,0},
-	{1,0,0,0,1},
-	{1,0,0,0,1},
-	{1,1,1,1,0}
-};
+
 void draw_init()
 {
 	printf("Hello Kjetil, I'm game!\n");
@@ -104,3 +97,4 @@ void draw_letter(int letter[7][5], int size, int x, int y, uint16_t color){
 		}
 	}
 }
+
