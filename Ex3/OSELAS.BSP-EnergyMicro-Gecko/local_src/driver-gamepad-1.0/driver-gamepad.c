@@ -27,8 +27,8 @@ uint32_t *ioremap;
 static int __init template_init(void)
 {
 	printk("Hello World, here is your module fucking\n");
-	*err = request_mem_region(GPIO_PC_DIN, 32, "GPIO IN");
-	*ioremap = ioremap_nocache(GPIO_PC_DIN, 32);
+	err = request_mem_region(GPIO_PC_BASE + GPIO_PC_DIN, 32, "GPIO IN");
+	ioremap = ioremap_nocache(GPIO_PC_BASE + GPIO_PC_DIN, 32);
 
 	if (*err == NULL){
 		printk("Failure\n");
@@ -45,15 +45,23 @@ static int __init template_init(void)
 
 void setup_GPIO()
 {
-	iowrite32(0x33333333, GPIO_PC_MODEL);
+	iowrite32(0x33333333, ioremap + GPIO_PC_MODEL);
+	printk("Set pin 0-7 for input...");
   //GPIO_PC_MODEL = 0x33333333;
-	iowrite32(0xff, GPIO_PC_DOUT);
+	iowrite32(0xff, ioremap + GPIO_PC_DOUT);
+	printk("Enable internal pull-up...");
   //GPIO_PC_DOUT = 0xFF;
-	iowrite32(0x22222222, GPIO_EXTIPSELL);
+	iowrite32(0x22222222, ioremap + GPIO_EXTIPSELL);
+	printk("Enable port C to handle the interrupt...");
   //GPIO_EXTIPSELL = 0x22222222;
-	iowrite32(0xff, GPIO_EXTIFALL);
+	iowrite32(0xff, ioremap + GPIO_EXTIFALL);
+	printk("Set interrupt handling for 1->0 transitions...")
   //GPIO_EXTIFALL = 0xFF;
-	iowrite32(0xff, GPIO_IEN);
+	iowrite32(0xff, ioremap + EXTIRISE);
+	printk("Set interrupt handling for 0->1 transitions...");
+	iowrite32(0xff, ioremap + GPIO_IEN);
+	printk("Enable interrupt generation...");
+	printk("GPIO AND GPIO INTERRUPTS ARE NOW SET UP!");
   //GPIO_IEN = 0xFF;
 }
 
