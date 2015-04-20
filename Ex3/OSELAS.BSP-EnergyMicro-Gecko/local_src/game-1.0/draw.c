@@ -8,11 +8,7 @@
 #include "draw.h"		// Header file
 #include "fonts.h"		// Font arrays
 
-//System constants
-#define SCREEN_WIDTH 320
-#define SCREEN_HEIGHT 240
-#define SCREEN_SIZE SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(uint16_t)
-#define SCREEN_PATH "/dev/fb0"
+
 
 //Global variables
 static struct fb_copyarea rect;
@@ -32,7 +28,7 @@ void draw_pixel(int x, int y, uint16_t color);
 void draw_row(int row, uint16_t color);
 void draw_init();
 void draw_letter(int letter[7][5], int size, int x, int y, uint16_t color);
-
+void draw_background_grid();
 
 //Initialization function
 void draw_init()
@@ -96,7 +92,6 @@ void draw_letter(int letter[7][5], int size, int x, int y, uint16_t color)
 	ctrY = 0;
 	for (i = y; i < y + size * 7; i+=size){
 		ctrX = 0;
-		ctrY++;
 		for (j = x; j < x + size * 5; j+=size){
 			if (letter[ctrY][ctrX] == 1){
 				for (k = 0; k < size; k++){
@@ -107,6 +102,7 @@ void draw_letter(int letter[7][5], int size, int x, int y, uint16_t color)
 			}
 			ctrX++;
 		}
+		ctrY++;
 	}
 }
 
