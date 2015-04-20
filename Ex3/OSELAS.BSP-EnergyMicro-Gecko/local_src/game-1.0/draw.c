@@ -5,6 +5,7 @@
 #include <sys/mman.h>	// mmap()
 #include <sys/ioctl.h> 	// ioctl()
 #include <fcntl.h> 		// open()
+#include "draw.h"
 
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 240
@@ -21,8 +22,9 @@ static uint16_t current_color;
 void draw_to_display(void);
 void draw_pixel(int x, int y, uint16_t color);
 void draw_row(int row, uint16_t color);
+void draw_init();
 
-int main(int argc, char *argv[])
+void draw_init()
 {
 	printf("Hello Kjetil, I'm game!\n");
 
