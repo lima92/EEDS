@@ -2,6 +2,9 @@
 #
 #
 #
+
+.PHONY: flash compile target
+
 all: compile target flash
 	
 
@@ -11,8 +14,9 @@ flash:
 
 compile:
 	ptxdist clean driver-gamepad
-	ptxdist compile driver-gamepad
-
+	ptxdist go
+#	ptxdist compile driver-gamepad
+	
 target:
 	ptxdist targetinstall driver-gamepad
 
