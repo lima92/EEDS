@@ -7,6 +7,9 @@
 #include <linux/init.h>
 #include <linux/ioport.h>
 #include <linux/io.h>
+#include <linux/interrupt.h>
+
+#include <asm/signal.h>
 
 #include "efm32gg.h"
 
@@ -19,17 +22,19 @@
  * Returns 0 if successfull, otherwise -1
  */
 
-void setup_GPIO();
+static const char *dev_name = "GAMEPAD";
 
-uint32_t *err;
+void setup_GPIO();
+void setup_interrupts();
+
+uint32_t *err, *err_odd, *err_even, *handler;
 uint32_t *ioremap;
 
 static int __init template_init(void)
 {
 	printk("Hello World, here is your module fucking\n");
-	err = request_mem_region(GPIO_PC_BASE + GPIO_PC_DIN, 32, "GPIO IN");
+	err = request_mem_region(GPIO_PC_BASE + GPIO_PC_DIN, 32, *dev_name);
 	ioremap = ioremap_nocache(GPIO_PC_BASE + GPIO_PC_DIN, 32);
-
 	if (*err == NULL){
 		printk("Failure\n");
 		return -1;
@@ -40,6 +45,7 @@ static int __init template_init(void)
 
 	setup_GPIO();
 
+	setup_interrupts();
 	return 0;
 }
 
@@ -55,15 +61,29 @@ void setup_GPIO()
 	printk("Enable port C to handle the interrupt...");
   //GPIO_EXTIPSELL = 0x22222222;
 	iowrite32(0xff, ioremap + GPIO_EXTIFALL);
-	printk("Set interrupt handling for 1->0 transitions...")
+	printk("Set interrupt handling for 1->0 transitions...");
   //GPIO_EXTIFALL = 0xFF;
-	iowrite32(0xff, ioremap + EXTIRISE);
+	iowrite32(0xff, ioremap + GPIO_EXTIRISE);
 	printk("Set interrupt handling for 0->1 transitions...");
 	iowrite32(0xff, ioremap + GPIO_IEN);
 	printk("Enable interrupt generation...");
 	printk("GPIO AND GPIO INTERRUPTS ARE NOW SET UP!");
   //GPIO_IEN = 0xFF;
 }
+
+
+void setup_interrupts()
+{
+	err_even = request_irq(17, *handler, NULL,*dev_name, NULL);
+	if(err_even){
+		printk(KERN_INFO "can't get assigned irq 17\n");
+	}
+	err_odd = request_irq(18, *handler, NULL,*dev_name, NULL);
+	if(err_odd){
+		printk(KERN_INFO "can't get assigned irq 18\n");
+	}
+}
+
 
 /*
  * template_cleanup - function to cleanup this module from kernel space
@@ -74,7 +94,7 @@ void setup_GPIO()
 
 static void __exit template_cleanup(void)
 {
-	release_mem_region(GPIO_PC_BASE + GPIO_PC_DIN, 32);
+	release_mem_region(ioremap + GPIO_PC_DIN, 32);
 	printk("Short life for a small module...\n");
 }
 

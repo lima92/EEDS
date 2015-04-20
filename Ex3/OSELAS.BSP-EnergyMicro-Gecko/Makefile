@@ -2,15 +2,17 @@
 #
 #
 #
-
+all: compile target flash
+	
 
 flash:
 	ptxdist image root.romfs
 	ptxdist test flash-rootfs
 
-compile gamepad:
+compile:
 	ptxdist clean driver-gamepad
 	ptxdist compile driver-gamepad
 
-
+target:
+	ptxdist targetinstall driver-gamepad
 

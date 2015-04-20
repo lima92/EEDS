@@ -395,3 +395,218 @@ driver-gamepad.extract.post : base.install
 driver-gamepad.prepare : driver-gamepad.extract.post
 driver-gamepad.compile : driver-gamepad.prepare
 driver-gamepad.compile : driver-gamepad.prepare
+game.clean : 
+driver-gamepad.clean : FORCE
+game.get : 
+game.extract : game.get
+game.extract.post : base.install
+game.prepare : game.extract.post
+game.compile : game.prepare
+driver-gamepad.get : 
+driver-gamepad.extract : host-lndir.install.post
+driver-gamepad.extract.post : base.install
+driver-gamepad.prepare : driver-gamepad.extract.post
+driver-gamepad.compile : driver-gamepad.prepare
+game.clean : 
+driver-gamepad.clean : FORCE
+game.get : 
+game.extract : game.get
+game.extract.post : base.install
+game.prepare : game.extract.post
+game.compile : game.prepare
+driver-gamepad.get : 
+driver-gamepad.extract : host-lndir.install.post
+driver-gamepad.extract.post : base.install
+driver-gamepad.prepare : driver-gamepad.extract.post
+driver-gamepad.compile : driver-gamepad.prepare
+game.clean : 
+driver-gamepad.clean : FORCE
+game.get : 
+game.extract : game.get
+game.extract.post : base.install
+game.prepare : game.extract.post
+game.compile : game.prepare
+driver-gamepad.get : 
+driver-gamepad.extract : host-lndir.install.post
+driver-gamepad.extract.post : base.install
+driver-gamepad.prepare : driver-gamepad.extract.post
+driver-gamepad.compile : driver-gamepad.prepare
+driver-gamepad.install : driver-gamepad.compile
+driver-gamepad.install.pack : driver-gamepad.install
+driver-gamepad.install.post : driver-gamepad.install.pack
+driver-gamepad.targetinstall : driver-gamepad.install.post
+driver-gamepad.targetinstall.post : driver-gamepad.targetinstall
+host-genromfs.get : genromfs-0.5.2.tar.gz
+host-genromfs.extract : host-genromfs.get
+host-genromfs.extract.post : virtual-host-tools.install
+host-genromfs.prepare : host-genromfs.extract.post
+host-genromfs.compile : host-genromfs.prepare
+host-genromfs.install : host-genromfs.compile
+host-genromfs.install.pack : host-genromfs.install
+host-genromfs.install.post : host-genromfs.install.pack
+driver-gamepad.clean : FORCE
+driver-gamepad.get : 
+driver-gamepad.extract : host-lndir.install.post
+driver-gamepad.extract.post : base.install
+driver-gamepad.prepare : driver-gamepad.extract.post
+driver-gamepad.compile : driver-gamepad.prepare
+driver-gamepad.install : driver-gamepad.compile
+driver-gamepad.install.pack : driver-gamepad.install
+driver-gamepad.install.post : driver-gamepad.install.pack
+driver-gamepad.targetinstall : driver-gamepad.install.post
+driver-gamepad.targetinstall.post : driver-gamepad.targetinstall
+os-release.targetinstall : os-release.install.post
+os-release.targetinstall.post : os-release.targetinstall
+dtc.extract.post : base.install
+dtc.prepare : dtc.extract.post
+dtc.compile : dtc.prepare
+dtc.install : dtc.compile
+efm32gg-dk3750.dtb : dtc.install
+dtc.install.pack : dtc.install
+dtc.install.post : dtc.install.pack
+dtc.targetinstall : kernel.targetinstall
+dtc.targetinstall.post : dtc.targetinstall
+kernel.targetinstall.post : linuximage
+game.install : game.compile
+game.install.pack : game.install
+game.install.post : game.install.pack
+game.targetinstall : game.install.post
+game.targetinstall.post : game.targetinstall
+busybox.get : busybox-1.21.0.tar.bz2
+busybox.extract : busybox.get
+busybox.extract.post : base.install
+busybox.prepare : busybox.extract.post
+busybox.compile : busybox.prepare
+busybox.compile : busybox.prepare
+busybox.install : busybox.compile
+busybox.install.pack : busybox.install
+busybox.install.post : busybox.install.pack
+busybox.targetinstall : busybox.install.post
+busybox.targetinstall.post : busybox.targetinstall
+host-figlet.get : figlet-2.2.5.tar.gz
+host-figlet.extract : host-figlet.get
+host-figlet.extract.post : virtual-host-tools.install
+host-figlet.prepare : host-figlet.extract.post
+host-figlet.compile : host-figlet.prepare
+host-figlet.install : host-figlet.compile
+host-figlet.install.pack : host-figlet.install
+host-figlet.install.post : host-figlet.install.pack
+rootfs.extract.post : base.install
+rootfs.prepare : rootfs.extract.post
+rootfs.compile : rootfs.prepare
+rootfs.install : rootfs.compile
+rootfs.install.pack : rootfs.install
+rootfs.install.post : rootfs.install.pack
+rootfs.targetinstall : issue
+rootfs.targetinstall.post : rootfs.targetinstall
+host-ipkg.get : ipkg-0.99.163.tar.gz
+host-ipkg.extract : host-ipkg.get
+host-ipkg.extract.post : virtual-host-tools.install
+host-ipkg.prepare : host-ipkg.extract.post
+host-ipkg.compile : host-ipkg.prepare
+host-ipkg.install : host-ipkg.compile
+host-ipkg.install.pack : host-ipkg.install
+host-ipkg.install.post : host-ipkg.install.pack
+host-energyawaretools.get : energyAwareTools_25052012.tgz
+host-energyawaretools.extract : host-energyawaretools.get
+host-energyawaretools.extract.post : virtual-host-tools.install
+host-energyawaretools.prepare : host-energyawaretools.extract.post
+host-energyawaretools.compile : host-energyawaretools.prepare
+host-energyawaretools.install : host-energyawaretools.compile
+host-energyawaretools.install.pack : host-energyawaretools.install
+host-energyawaretools.install.post : host-energyawaretools.install.pack
+world.targetinstall : base.targetinstall.post os-release.targetinstall.post geckoboot.targetinstall.post init.targetinstall.post fbtest.targetinstall.post driver-gamepad.targetinstall.post dtc.targetinstall.post kernel.targetinstall.post game.targetinstall.post host-system-perl.targetinstall.post busybox.targetinstall.post rootfs.targetinstall.post host-acl.install.post host-ipkg.install.post host-genromfs.install.post host-ipkg-utils.install.post host-fakeroot.install.post host-figlet.install.post host-pkg-config.install.post host-libkmod.install.post host-attr.install.post host-energyawaretools.install.post cross-pkg-config-wrapper.install.post cross-dummy-strip.install.post
+game.clean : 
+driver-gamepad.clean : FORCE
+game.get : 
+game.extract : game.get
+game.extract.post : base.install
+game.prepare : game.extract.post
+game.compile : game.prepare
+driver-gamepad.get : 
+driver-gamepad.extract : host-lndir.install.post
+driver-gamepad.extract.post : base.install
+driver-gamepad.prepare : driver-gamepad.extract.post
+driver-gamepad.compile : driver-gamepad.prepare
+game.clean : 
+driver-gamepad.clean : FORCE
+game.get : 
+game.extract : game.get
+game.extract.post : base.install
+game.prepare : game.extract.post
+game.compile : game.prepare
+driver-gamepad.get : 
+driver-gamepad.extract : host-lndir.install.post
+driver-gamepad.extract.post : base.install
+driver-gamepad.prepare : driver-gamepad.extract.post
+driver-gamepad.compile : driver-gamepad.prepare
+driver-gamepad.install : driver-gamepad.compile
+driver-gamepad.install.pack : driver-gamepad.install
+driver-gamepad.install.post : driver-gamepad.install.pack
+driver-gamepad.targetinstall : driver-gamepad.install.post
+driver-gamepad.targetinstall.post : driver-gamepad.targetinstall
+driver-gamepad.clean : FORCE
+driver-gamepad.get : 
+driver-gamepad.extract : host-lndir.install.post
+driver-gamepad.extract.post : base.install
+driver-gamepad.prepare : driver-gamepad.extract.post
+driver-gamepad.compile : driver-gamepad.prepare
+driver-gamepad.install : driver-gamepad.compile
+driver-gamepad.install.pack : driver-gamepad.install
+driver-gamepad.install.post : driver-gamepad.install.pack
+driver-gamepad.targetinstall : driver-gamepad.install.post
+driver-gamepad.targetinstall.post : driver-gamepad.targetinstall
+kernel.targetinstall.post : linuximage
+game.install : game.compile
+game.install.pack : game.install
+game.install.post : game.install.pack
+game.targetinstall : game.install.post
+game.targetinstall.post : game.targetinstall
+world.targetinstall : base.targetinstall.post os-release.targetinstall.post geckoboot.targetinstall.post init.targetinstall.post fbtest.targetinstall.post driver-gamepad.targetinstall.post dtc.targetinstall.post kernel.targetinstall.post game.targetinstall.post host-system-perl.targetinstall.post busybox.targetinstall.post rootfs.targetinstall.post host-acl.install.post host-ipkg.install.post host-genromfs.install.post host-ipkg-utils.install.post host-fakeroot.install.post host-figlet.install.post host-pkg-config.install.post host-libkmod.install.post host-attr.install.post host-energyawaretools.install.post cross-pkg-config-wrapper.install.post cross-dummy-strip.install.post
+driver-gamepad.clean : FORCE
+driver-gamepad.get : 
+driver-gamepad.extract : host-lndir.install.post
+driver-gamepad.extract.post : base.install
+driver-gamepad.prepare : driver-gamepad.extract.post
+driver-gamepad.compile : driver-gamepad.prepare
+driver-gamepad.install : driver-gamepad.compile
+driver-gamepad.install.pack : driver-gamepad.install
+driver-gamepad.install.post : driver-gamepad.install.pack
+driver-gamepad.targetinstall : driver-gamepad.install.post
+driver-gamepad.targetinstall.post : driver-gamepad.targetinstall
+driver-gamepad.clean : FORCE
+driver-gamepad.get : 
+driver-gamepad.extract : host-lndir.install.post
+driver-gamepad.extract.post : base.install
+driver-gamepad.prepare : driver-gamepad.extract.post
+driver-gamepad.compile : driver-gamepad.prepare
+driver-gamepad.clean : FORCE
+driver-gamepad.get : 
+driver-gamepad.extract : host-lndir.install.post
+driver-gamepad.extract.post : base.install
+driver-gamepad.prepare : driver-gamepad.extract.post
+driver-gamepad.compile : driver-gamepad.prepare
+driver-gamepad.clean : FORCE
+driver-gamepad.get : 
+driver-gamepad.extract : host-lndir.install.post
+driver-gamepad.extract.post : base.install
+driver-gamepad.prepare : driver-gamepad.extract.post
+driver-gamepad.compile : driver-gamepad.prepare
+driver-gamepad.clean : FORCE
+driver-gamepad.get : 
+driver-gamepad.extract : host-lndir.install.post
+driver-gamepad.extract.post : base.install
+driver-gamepad.prepare : driver-gamepad.extract.post
+driver-gamepad.compile : driver-gamepad.prepare
+driver-gamepad.clean : FORCE
+driver-gamepad.get : 
+driver-gamepad.extract : host-lndir.install.post
+driver-gamepad.extract.post : base.install
+driver-gamepad.prepare : driver-gamepad.extract.post
+driver-gamepad.compile : driver-gamepad.prepare
+driver-gamepad.clean : FORCE
+driver-gamepad.get : 
+driver-gamepad.extract : host-lndir.install.post
+driver-gamepad.extract.post : base.install
+driver-gamepad.prepare : driver-gamepad.extract.post
+driver-gamepad.compile : driver-gamepad.prepare
