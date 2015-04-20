@@ -6,7 +6,8 @@
 .PHONY: flash compile target
 
 all: compile target flash
-	
+
+game: compilegame target2 flash
 
 flash:
 	ptxdist image root.romfs
@@ -16,7 +17,14 @@ compile:
 	ptxdist clean driver-gamepad
 	ptxdist go
 #	ptxdist compile driver-gamepad
+
+compilegame:
+	ptxdist clean game
+	ptxdist go
 	
 target:
 	ptxdist targetinstall driver-gamepad
+
+target2:
+	ptxdist targetinstall game
 
