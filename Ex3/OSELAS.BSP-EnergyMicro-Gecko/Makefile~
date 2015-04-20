@@ -26,5 +26,5 @@ target:
 	ptxdist targetinstall driver-gamepad
 
 target2:
-	ptxdist targetinstall game
+	ptxdist targetinstall game draw
 
