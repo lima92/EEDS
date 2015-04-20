@@ -114,9 +114,9 @@ void draw_background_grid()
 {
 	int i, j;
 
-	for (i = 0; i < SCREEN_WIDTH; i++){
-		for (j = 0; j < SCREEN_HEIGHT; j++){
-			if (i % 4 == 0 || j % 4 == 0){
+	for (i = 0; i < SCREEN_HEIGHT; i++){
+		for (j = 0; j < SCREEN_WIDTH; j++){
+			if (i % 4 == 2 || j % 4 == 2 || i < 2 || j < 2 || i > SCREEN_HEIGHT - 2 || j > SCREEN_WIDTH - 2){
 				draw_pixel(j, i, white);
 			}
 			else{
