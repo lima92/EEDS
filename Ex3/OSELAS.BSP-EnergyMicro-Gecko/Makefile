@@ -5,10 +5,12 @@
 
 
 flash:
+	ptxdist image root.romfs
 	ptxdist test flash-rootfs
 
-compile:
-	ptxdist clean game
+compile gamepad:
 	ptxdist clean driver-gamepad
-	ptxdist compile game
 	ptxdist compile driver-gamepad
+
+
+
