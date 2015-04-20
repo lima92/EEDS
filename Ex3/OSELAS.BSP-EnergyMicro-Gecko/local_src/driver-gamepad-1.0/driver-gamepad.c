@@ -25,7 +25,7 @@
  * Returns 0 if successfull, otherwise -1
  */
 
-static const char *dev_name = "GAMEPAD";
+static const char *dev_name = "gamepad";
 
 void setup_GPIO();
 void setup_interrupts();
@@ -41,14 +41,30 @@ struct gamepad_dev {
 	unsigned int acces_key;
 	struct semaphore sem;
 	struct cdev cdev;
-};
+	dev_t *dev;
+}gp;
 
 
 
 
 static int __init gamepad_init(void)
 {
-	printk("Hello World, here is your module: %c fucking v8\n", dev_name);
+	printk("Hello World, here is your module: %c fucking v10\n", dev_name);
+
+	int err_reg = alloc_chrdev_region(&gp.dev, 0, 2, dev_name);
+	printk("dev: %i\n",&gp.dev);
+	printk("*deb: %i\n",&gp.dev);
+
+	if(!err_reg){
+		printk("CharDev reg successfull");
+	}else{
+		printk("Failed to register dev\n");
+		printk("err: %i\n",err_reg);
+		return err_reg;
+	}
+
+
+	err_cdev = cdev_init(gamepad_dev.cdev, 
 
 	err = request_mem_region(GPIO_PC_BASE + GPIO_PC_DIN, 32, dev_name);
 	
@@ -116,6 +132,7 @@ void setup_interrupts()
 
 static void __exit gamepad_cleanup(void)
 {
+	unregister_chrdev_region(0,2);
 	release_mem_region(ioremap + GPIO_PC_DIN, 32);
 	printk("Short life for a small module...\n");
 }
