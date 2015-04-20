@@ -11,3 +11,6 @@ void draw_row(int row, uint16_t color);
 
 //Initializes drawing
 void draw_init();
+
+//Draw a letter
+void draw_letter(int letter[7][5], int size, int x, int y, uint16_t color);

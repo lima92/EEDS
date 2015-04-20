@@ -23,7 +23,16 @@ void draw_to_display(void);
 void draw_pixel(int x, int y, uint16_t color);
 void draw_row(int row, uint16_t color);
 void draw_init();
-
+void draw_letter(int letter[7][5], int size, int x, int y, uint16_t color);
+int _char_B[7][5] = {
+	{1,1,1,1,0},
+	{1,0,0,0,1},
+	{1,0,0,0,1},
+	{1,1,1,1,0},
+	{1,0,0,0,1},
+	{1,0,0,0,1},
+	{1,1,1,1,0}
+};
 void draw_init()
 {
 	printf("Hello Kjetil, I'm game!\n");
@@ -43,9 +52,11 @@ void draw_init()
 	int i, j;
 	for (i = 0; i < (int)SCREEN_WIDTH; i++){
 		for (j = 0; j < (int)SCREEN_HEIGHT; j++){
-			frame[i + j * SCREEN_WIDTH] = current_color;
+			draw_pixel(i, j, current_color);
 		}
 	}
+	current_color = (0 << 11) + (0 << 5) + (0 << 0);
+	draw_letter(_char_B, 5, 0, 0, current_color);
 
 	draw_to_display();
 
@@ -73,6 +84,22 @@ void draw_row(int row, uint16_t color){
 	}
 }
 
+void draw_letter(int letter[7][5], int size, int x, int y, uint16_t color){
 
+	int i, j, ctrX, ctrY;
+	ctrY = 0;
+	for (i = y; i < y + size * 7; i+=size){
+		ctrX = 0;
+		ctrY++;
+		for (j = x; j < x + size * 5; j+=size){
+			if (letter[ctrY][ctrX] == 1){
+				draw_pixel(i, j, color);
+				draw_pixel(i, j + 1, color);
+				draw_pixel(i + 1, j, color);
+				draw_pixel(i + 1, j + 1, color);
+			}
+			ctrX++;
 
-
+		}
+	}
+}
