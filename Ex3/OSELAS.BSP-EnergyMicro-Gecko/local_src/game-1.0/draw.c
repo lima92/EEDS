@@ -86,17 +86,18 @@ void draw_row(int row, uint16_t color){
 
 void draw_letter(int letter[7][5], int size, int x, int y, uint16_t color){
 
-	int i, j, ctrX, ctrY;
+	int i, j, ctrX, ctrY, k, l;
 	ctrY = 0;
 	for (i = y; i < y + size * 7; i+=size){
 		ctrX = 0;
 		ctrY++;
 		for (j = x; j < x + size * 5; j+=size){
 			if (letter[ctrY][ctrX] == 1){
-				draw_pixel(i, j, color);
-				draw_pixel(i, j + 1, color);
-				draw_pixel(i + 1, j, color);
-				draw_pixel(i + 1, j + 1, color);
+				for (k = 0; k < size; k++){
+					for (l = 0; l < size; l++){
+						draw_pixel(j + l, i + k, color);
+					}
+				}
 			}
 			ctrX++;
 
