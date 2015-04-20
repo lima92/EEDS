@@ -1,4 +1,3 @@
-#include <stdint.h>
 
 //Draws the framebuffer
 void draw_to_display(void);

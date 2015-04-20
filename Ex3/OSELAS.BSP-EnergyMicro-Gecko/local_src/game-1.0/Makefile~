@@ -12,9 +12,7 @@ LDFLAGS +=
 
 
 
-all: game
-
-game: draw.o
+all: draw game
 
 clean:
 	-rm -f game
