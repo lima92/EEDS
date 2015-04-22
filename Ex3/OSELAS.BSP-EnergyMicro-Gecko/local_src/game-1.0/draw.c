@@ -15,12 +15,8 @@ static struct fb_copyarea rect;
 static int fbfd;
 static uint16_t* frame;
 static uint16_t current_color;
-static uint16_t red = (31 << 11) + (0 << 5) + (0 << 0);
-static uint16_t green = (0 << 11) + (63 << 5) + (0 << 0);
-static uint16_t blue = (0 << 11) + (0 << 5) + (31 << 0);
-static uint16_t pink = (30 << 11) + (36 << 5) + (31 << 0);
-static uint16_t black = (0 << 11) + (0 << 5) + (0 << 0);
-static uint16_t white = (31 << 11) + (63 << 5) + (31 << 0);
+
+
 
 //Function declarations
 void draw_to_display(void);
@@ -29,6 +25,7 @@ void draw_row(int row, uint16_t color);
 void draw_init();
 void draw_letter(int letter[7][5], int size, int x, int y, uint16_t color);
 void draw_background_grid();
+void draw_body_part(int x, int y, uint16_t color);
 
 //Initialization function
 void draw_init()
@@ -54,13 +51,14 @@ void draw_init()
 		}
 	}
 	current_color = black;
+	draw_background_grid();
 	draw_letter(_char_T, 5, 100, 100, current_color);
 	draw_letter(_char_I, 5, 130, 100, current_color);
 	draw_letter(_char_P, 5, 160, 100, current_color);
 	draw_letter(_char_K, 5, 230, 100, current_color);
 	draw_letter(_char_E, 5, 260, 100, current_color);
 	draw_letter(_char_K, 5, 290, 100, current_color);
-	//draw_background_grid();
+	
 
 	draw_to_display();
 
@@ -108,6 +106,17 @@ void draw_letter(int letter[7][5], int size, int x, int y, uint16_t color)
 		ctrY++;
 	}
 }
+
+void draw_body_part(int x, int y, uint16_t color){
+	int i, j;
+
+	for(i = -1; i <= 1; i++){
+		for (j = -1; j <= 1; j++){
+			draw_pixel(x + j, y + i, color);
+		}
+	}
+}
+
 
 void draw_background_grid()
 {
