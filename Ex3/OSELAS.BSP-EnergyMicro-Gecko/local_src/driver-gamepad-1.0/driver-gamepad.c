@@ -25,15 +25,22 @@
  * Returns 0 if successfull, otherwise -1
  */
 
-static const char *dev_name = "gamepad";
+#define DEV_NAME "gamepad"
 
 void setup_GPIO();
 void setup_interrupts();
 
+static int gp_open(struct inode*, struct file*);
+static int gp_release(struct inode*, struct file*);
+static ssize_t gp_read(struct file*, char* __user, size_t, loff_t*);
+static ssize_t gp_write(struct file*, char* __user, size_t, loff_t*);
+
 uint32_t *err, *err_odd, *err_even, *handler;
 uint32_t *ioremap;
 
-struct gamepad_dev {
+dev_t *dev; //device number
+
+struct gamepad_dev{
 	struct gamepad_qset *data;
 	int quantum;
 	int qset;
@@ -41,32 +48,49 @@ struct gamepad_dev {
 	unsigned int acces_key;
 	struct semaphore sem;
 	struct cdev cdev;
-	dev_t *dev;
-}gp;
+} gp_dev;
+
+struct file_operations gp_fops = {
+	.owner = THIS_MODULE,
+//	.read = gp_read,
+//	.write = gp_write,
+//	.ioctl = gp_ioctl,
+//	.open = gp_open,
+//	.release = gp_release,
+};
 
 
 
 
 static int __init gamepad_init(void)
 {
-	printk("Hello World, here is your module: %c fucking v10\n", dev_name);
+	printk("Hello World, here is your module: %c fucking v13\n", DEV_NAME);
 
-	int err_reg = alloc_chrdev_region(&gp.dev, 0, 2, dev_name);
-	printk("dev: %i\n",&gp.dev);
-	printk("*deb: %i\n",&gp.dev);
+
+	int err_reg = alloc_chrdev_region(&dev, 0, 2, DEV_NAME);
+	printk("dev: %i\n",dev);
+	printk("*deb: %i\n",*dev);
 
 	if(!err_reg){
-		printk("CharDev reg successfull");
+		printk("CharDev reg successfull\n");
 	}else{
 		printk("Failed to register dev\n");
 		printk("err: %i\n",err_reg);
 		return err_reg;
 	}
+	
 
+	cdev_init(&gp_dev.cdev, &gp_fops);
+	gp_dev.cdev.owner = THIS_MODULE;
+	printk(KERN_NOTICE "gp_dev.cdev.owner: %i", gp_dev.cdev.owner);
+	int err_cdev = cdev_add (&gp_dev.cdev, *dev, 1);
+	if(err_cdev){
+		printk(KERN_NOTICE "Error %d adding dev%d", err_cdev, 0);
+	}else{
+		printk(KERN_NOTICE "cdev added successfully!/n");
+	}
 
-	err_cdev = cdev_init(gamepad_dev.cdev, 
-
-	err = request_mem_region(GPIO_PC_BASE + GPIO_PC_DIN, 32, dev_name);
+	err = request_mem_region(GPIO_PC_BASE + GPIO_PC_DIN, 32, DEV_NAME);
 	
 	if (*err == NULL){
 		printk("Failure\n");
@@ -81,6 +105,7 @@ static int __init gamepad_init(void)
 	setup_interrupts();
 	return 0;
 }
+
 
 void setup_GPIO()
 {
@@ -109,11 +134,13 @@ void setup_GPIO()
 
 void setup_interrupts()
 {
-	err_even = request_irq(17, *handler, NULL, dev_name, NULL);
+	//request GPIO_EVEN IRQ line (nr17)
+	err_even = request_irq(17, *handler, NULL, DEV_NAME, NULL);
 	if(err_even){
 		printk(KERN_INFO "can't get assigned irq 17\n");
 	}
-	err_odd = request_irq(18, *handler, NULL, dev_name, NULL);
+	//request GPIO_ODD IRQ line (nr18)
+	err_odd = request_irq(18, *handler, NULL, DEV_NAME, NULL);
 	if(err_odd){
 		printk(KERN_INFO "can't get assigned irq 18\n");
 	}

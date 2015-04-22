@@ -54,9 +54,9 @@ void draw_init()
 		}
 	}
 	current_color = black;
-	draw_letter(_char_B, 5, 0, 0, current_color);
+	draw_letter(_char_B, 5, 100, 100, current_color);
 
-	draw_background_grid();
+	//draw_background_grid();
 
 	draw_to_display();
 
