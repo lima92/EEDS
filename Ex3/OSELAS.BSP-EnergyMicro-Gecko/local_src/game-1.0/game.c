@@ -15,7 +15,7 @@ int get_random_int(int min, int max);
 
 
 //Global variables
-tuple *p1, *p2;
+player *p1, *p2;
 int err;
 
 int main(int argc, char *argv[])
@@ -27,17 +27,15 @@ int main(int argc, char *argv[])
 		exit(EXIT_SUCCESS);
 	}
 	draw_body_part(p1->head_x, p1->head_y, green);
-
+	draw_to_display(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0);
 	exit(EXIT_SUCCESS);
 }
 
 
-int init_game(){
-	// *p1 = (struct tuple){get_random_int(3, SCREEN_WIDTH / 2), get_random_int(3, SCREEN_HEIGHT / 2), 0, 0};
-
-
+int init_game()
+{
 	//Instatiate Player1
-	p1 = (tuple*) malloc(sizeof(tuple));
+	p1 = (player*) malloc(sizeof(player));
 	if (p1 == NULL) {
 		// Something went wrong
 		return 0;
@@ -76,22 +74,13 @@ int init_game(){
 
 	p1->tail_x = p1->head_x;
 	p1->tail_y = p1->head_y;
-<<<<<<< HEAD
-	printf("Head_X %i \n" ,p1->head_x);
-	printf("Tail_X %i \n" ,p1->tail_x);
-
-	*p2 = (struct tuple){get_random_int(SCREEN_WIDTH / 2, SCREEN_WIDTH - 3), get_random_int(SCREEN_HEIGHT / 2, SCREEN_HEIGHT - 3), 0, 0};
-	if (p2->head_x % 4 == 2){
-		p2->head_x--;
-=======
 
 
 	//Instatiate Player2
-	p2 = (tuple*) malloc(sizeof(tuple));
+	p2 = (player*) malloc(sizeof(player));
 
 	if (p2 == NULL){
 		return 0;
->>>>>>> 8971df8635525b01f38ceb3f67f7a2ebfdae2990
 	}
 
 	p2->head_x = get_random_int(SCREEN_WIDTH / 2, SCREEN_WIDTH - 3);
@@ -129,10 +118,8 @@ int init_game(){
 }
 
 int get_random_int(int min, int max){
-	printf("INIT V1");
 	srand(time(NULL));
 	int random = ((rand() % max) + min);
 	//printf("Random number: %i\n", random);
 	return random;
 }
-

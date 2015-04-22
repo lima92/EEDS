@@ -1,7 +1,7 @@
 #include <stdint.h>
 
 //Draws the framebuffer
-void draw_to_display(void);
+void draw_to_display(int width, int height, int dx, int dy);
 
 //Draws a single pixel
 void draw_pixel(int x, int y, uint16_t color);
@@ -28,12 +28,12 @@ void draw_body_part(int x, int y, uint16_t color);
 #define SCREEN_PATH "/dev/fb0"
 
 
-typedef struct tuple {
+typedef struct player {
 	int head_x;
 	int head_y;
 	int tail_x;
 	int tail_y;
-} tuple;
+} player;
 
 typedef enum {LEFT = 0, RIGHT = 1} direction;
 
