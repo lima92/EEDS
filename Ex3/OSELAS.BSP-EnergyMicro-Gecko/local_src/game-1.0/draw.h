@@ -27,15 +27,17 @@ void draw_body_part(int x, int y, uint16_t color);
 #define SCREEN_SIZE SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(uint16_t)
 #define SCREEN_PATH "/dev/fb0"
 
+typedef enum {UP = 0, DOWN = 1, LEFT = 2, RIGHT = 3} direction;
 
 typedef struct player {
 	int head_x;
 	int head_y;
 	int tail_x;
 	int tail_y;
+	direction dir;
 } player;
 
-typedef enum {LEFT = 0, RIGHT = 1} direction;
+static uint16_t* frame;
 
 static uint16_t red = (31 << 11) + (0 << 5) + (0 << 0);
 static uint16_t green = (0 << 11) + (63 << 5) + (0 << 0);
@@ -43,3 +45,5 @@ static uint16_t blue = (0 << 11) + (0 << 5) + (31 << 0);
 static uint16_t pink = (30 << 11) + (36 << 5) + (31 << 0);
 static uint16_t black = (0 << 11) + (0 << 5) + (0 << 0);
 static uint16_t white = (31 << 11) + (63 << 5) + (31 << 0);
+static uint16_t bg_color = (0 << 11) + (0 << 5) + (0 << 0);
+static uint16_t frame_color = (31 << 11) + (63 << 5) + (31 << 0);

@@ -13,7 +13,7 @@
 //Global variables
 static struct fb_copyarea rect;
 static int fbfd;
-static uint16_t* frame;
+//static uint16_t* frame;
 static uint16_t current_color;
 
 
@@ -58,12 +58,8 @@ void draw_init()
 	draw_letter(_char_K, 5, 230, 100, current_color);
 	draw_letter(_char_E, 5, 260, 100, current_color);
 	draw_letter(_char_K, 5, 290, 100, current_color);
-	FILE* f;
 
 
-	char* buff = (char*) malloc(sizeof(char)*20);
-	freed(buff, 2, 1, f);
-	printf("%s\n", buff);
 
 	draw_to_display(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0);
 
@@ -120,6 +116,7 @@ void draw_body_part(int x, int y, uint16_t color){
 			draw_pixel(x + j, y + i, color);
 		}
 	}
+	draw_to_display(3, 3, x - 1, y - 1);
 }
 
 
