@@ -20,7 +20,7 @@
 /*
  * template_init - function to insert this module into kernel space
  *
- * This is the first of two exported functions to handle inserting this
+ * This is the first of two exported functions to handle insert ga	ing this
  * code into a running kernel
  *
  * Returns 0 if successfull, otherwise -1
@@ -55,7 +55,7 @@ struct gamepad_dev{
 
 struct file_operations gp_fops = {
 	.owner = THIS_MODULE,
-//	.read = gp_read,
+	.read = gp_read,
 //	.write = gp_write,
 //	.ioctl = gp_ioctl,
 	.open = gp_open,
@@ -96,7 +96,7 @@ static int __init gamepad_init(void)
 
 	//Create device file
 	int gp_class = class_create(THIS_MODULE, DEV_NAME);
-	printk("gp_class %i\n", gp_class);
+	printk("gp_class %i\n", *gp_class);
 	device_create(gp_class, NULL, dev, NULL, DEV_NAME);
 	return 0;
 }
@@ -170,6 +170,15 @@ int setup_interrupts(void)
 		return -1;
 	}
 	
+}
+
+
+static ssize_t gp_read(struct file* file, char* __user user, size_t, loff_t* loff_t)
+{
+	printk("Reading Gamepad..\n");
+	int val = ioread32(ioremap + GPIO_PC_DIN);
+	printk("Val = %i\n", val);
+	return 0;
 }
 
 

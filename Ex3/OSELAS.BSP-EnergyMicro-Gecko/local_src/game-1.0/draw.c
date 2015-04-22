@@ -33,7 +33,11 @@ void draw_background_grid();
 //Initialization function
 void draw_init()
 {
+<<<<<<< HEAD
 	printf("Hello Kjetil, I'm game! v3\n");
+=======
+	printf("Hello Kjetil, I'm game! v5\n");
+>>>>>>> c398dc244afb19e5660767f835d1fbafa37e85ce
 
 	
 	current_color = white;
