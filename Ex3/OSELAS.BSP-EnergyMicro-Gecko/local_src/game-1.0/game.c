@@ -12,15 +12,15 @@ int get_random_int(int min, int max);
 //Type definitions
 typedef enum {LEFT = 0, RIGHT = 1} direction;
 
-typedef struct tuple{
+struct tuple{
 	int head_x;
 	int head_y;
 	int tail_x;
 	int tail_y;
-} tuple;
+};
 
 //Global variables
-tuple *p1, *p2;
+struct tuple *p1, *p2;
 
 int main(int argc, char *argv[])
 {
