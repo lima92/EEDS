@@ -44,8 +44,12 @@ int init_game(){
 		// Something went wrong
 		return 0;
 	}
-	p1->head_x = 10;
-	printf("HEAD X SHOULD BE TEN..%i", p1->head_x);
+	p1->head_x = get_random_int(3, SCREEN_WIDTH / 2);
+	p1->head_y = get_random_int(3, SCREEN_HEIGHT / 2);
+	p1->tail_x = p1->head_x;
+	p1->tail_y = p1->head_y;
+
+	printf("HEAD X SHOULD BE RANDOM..%i\n AND TAIL X SHOULD BE AS RANDOM..%i\n", p1->head_x, p1->tail_x);
 	return 1;
 	/*if (p1->head_x % 4 == 2){
 		p1->head_x++;
