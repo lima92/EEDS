@@ -44,8 +44,8 @@ void init_game(){
 	p1->tail_y = p1->head_y;
 	printf("Head_X %i \n" ,p1->head_x);
 	printf("Tail_X %i \n" ,p1->tail_x);
-	*p2 = (struct tuple){get_random_int(SCREEN_WIDTH / 2, SCREEN_WIDTH - 3), get_random_int(SCREEN_HEIGHT / 2, SCREEN_HEIGHT - 3), 0, 0};
 
+	*p2 = (struct tuple){get_random_int(SCREEN_WIDTH / 2, SCREEN_WIDTH - 3), get_random_int(SCREEN_HEIGHT / 2, SCREEN_HEIGHT - 3), 0, 0};
 	if (p2->head_x % 4 == 2){
 		p2->head_x--;
 	}
@@ -57,6 +57,7 @@ void init_game(){
 }
 
 int get_random_int(int min, int max){
+	printf("INIT V1");
 	srand(time(NULL));
 	int random = ((rand() % max) + min);
 	printf("Random number: %i", random);

@@ -28,8 +28,8 @@
 
 #define DEV_NAME "gamepad"
 
-void setup_GPIO();
-void setup_interrupts();
+int setup_GPIO();
+int setup_interrupts();
 
 static int gp_open(struct inode*, struct file*);
 static int gp_release(struct inode*, struct file*);
@@ -38,8 +38,9 @@ static ssize_t gp_write(struct file*, char* __user, size_t, loff_t*);
 
 uint32_t *err, *err_odd, *err_even, *handler;
 uint32_t *ioremap;
-struct class *gp_class;
-struct device *gp_device;
+
+static struct class *gp_class;
+static struct device *gp_device;
 dev_t *dev; //device number
 
 struct gamepad_dev{
@@ -57,8 +58,8 @@ struct file_operations gp_fops = {
 //	.read = gp_read,
 //	.write = gp_write,
 //	.ioctl = gp_ioctl,
-//	.open = gp_open,
-//	.release = gp_release,
+	.open = gp_open,
+	.release = gp_release,
 };
 
 
@@ -66,12 +67,11 @@ struct file_operations gp_fops = {
 
 static int __init gamepad_init(void)
 {
-	printk("Hello World, here is your module: %c fucking v13\n", DEV_NAME);
+	printk("Hello World, here is your module: %c fucking v15\n", DEV_NAME);
 
 
 	int err_reg = alloc_chrdev_region(&dev, 0, 2, DEV_NAME);
-	printk("dev: %i\n",dev);
-	printk("*deb: %i\n",*dev);
+	printk("dev: %i\n",*dev);
 
 	if(!err_reg){
 		printk("CharDev reg successfull\n");
@@ -84,14 +84,26 @@ static int __init gamepad_init(void)
 
 	cdev_init(&gp_dev.cdev, &gp_fops);
 	gp_dev.cdev.owner = THIS_MODULE;
-	printk(KERN_NOTICE "gp_dev.cdev.owner: %i", gp_dev.cdev.owner);
+	printk(KERN_NOTICE "gp_dev.cdev.owner: %i", *gp_dev.cdev.owner);
 	int err_cdev = cdev_add (&gp_dev.cdev, *dev, 1);
 	if(err_cdev){
-		printk(KERN_NOTICE "Error %d adding dev%d", err_cdev, 0);
+		printk(KERN_NOTICE "Error %i adding dev%i", err_cdev, 0);
 	}else{
-		printk(KERN_NOTICE "cdev added successfully!/n");
+		printk(KERN_NOTICE "cdev added successfully!\n");
 	}
 
+	
+
+	//Create device file
+	int gp_class = class_create(THIS_MODULE, DEV_NAME);
+	printk("gp_class %i\n", gp_class);
+	device_create(gp_class, NULL, dev, NULL, DEV_NAME);
+	return 0;
+}
+
+static int gp_open(struct inode *inode, struct file *file)
+{
+	printk("Opening Gamepad driver..\n\n");
 	err = request_mem_region(GPIO_PC_BASE + GPIO_PC_DIN, 32, DEV_NAME);
 	
 	if (*err == NULL){
@@ -102,19 +114,18 @@ static int __init gamepad_init(void)
 		printk("GPIO INPUT SUCCESS\n");
 	}
 
-
-	//MOVE TO OPEN?
-	setup_GPIO();
-	setup_interrupts();
-
-	//Create device file
-	gp_class = class_create(THIS_MODULE, DEV_NAME);
-	gp_device = device_create(gp_class, NULL, dev, NULL, DEV_NAME);
+	int err_gpio = setup_GPIO();
+	int err_irq = setup_interrupts();
+	
 	return 0;
 }
 
+static int gp_release(struct inode* inode, struct file* file)
+{
+	printk("Closing Gamepad driver..\n\n");
+}
 
-void setup_GPIO()
+int setup_GPIO(void)
 {
 	ioremap = ioremap_nocache(GPIO_PC_BASE, 32);
 
@@ -136,10 +147,11 @@ void setup_GPIO()
 	printk("Enable interrupt generation...\n");
 	printk("GPIO AND GPIO INTERRUPTS ARE NOW SET UP!\n");
   //GPIO_IEN = 0xFF;
+	return 0;
 }
 
 
-void setup_interrupts()
+int setup_interrupts(void)
 {
 	//request GPIO_EVEN IRQ line (nr17)
 	err_even = request_irq(17, *handler, NULL, DEV_NAME, NULL);
@@ -153,7 +165,11 @@ void setup_interrupts()
 	}
 	if(!err_even && !err_odd){
 		printk(KERN_INFO "IRQ set up successfully");
+		return 0;
+	}else{
+		return -1;
 	}
+	
 }
 
 
