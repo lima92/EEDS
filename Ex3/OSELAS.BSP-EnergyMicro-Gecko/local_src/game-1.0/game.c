@@ -58,6 +58,8 @@ void init_game(){
 
 int get_random_int(int min, int max){
 	srand(time(NULL));
-	return ((rand() % max) + min);
+	int random = ((rand() % max) + min);
+	printf("Random number: %i", random);
+	return random;
 }
 
