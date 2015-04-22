@@ -67,7 +67,7 @@ struct file_operations gp_fops = {
 
 static int __init gamepad_init(void)
 {
-	printk("Hello World, here is your module: %c fucking v15\n", DEV_NAME);
+	printk("Hello World, here is your module: %c fucking v16\n", DEV_NAME);
 
 
 	int err_reg = alloc_chrdev_region(&dev, 0, 2, DEV_NAME);
@@ -96,14 +96,9 @@ static int __init gamepad_init(void)
 
 	//Create device file
 	int gp_class = class_create(THIS_MODULE, DEV_NAME);
-	printk("gp_class %i\n", *gp_class);
+	printk("Created classfile");
 	device_create(gp_class, NULL, dev, NULL, DEV_NAME);
-	return 0;
-}
 
-static int gp_open(struct inode *inode, struct file *file)
-{
-	printk("Opening Gamepad driver..\n\n");
 	err = request_mem_region(GPIO_PC_BASE + GPIO_PC_DIN, 32, DEV_NAME);
 	
 	if (*err == NULL){
@@ -116,6 +111,13 @@ static int gp_open(struct inode *inode, struct file *file)
 
 	int err_gpio = setup_GPIO();
 	int err_irq = setup_interrupts();
+	return 0;
+}
+
+static int gp_open(struct inode *inode, struct file *file)
+{
+	printk("Opening Gamepad driver..\n\n");
+	
 	
 	return 0;
 }
@@ -173,7 +175,7 @@ int setup_interrupts(void)
 }
 
 
-static ssize_t gp_read(struct file* file, char* __user user, size_t, loff_t* loff_t)
+static ssize_t gp_read(struct file* file, char* __user user, size_t count, loff_t* loff_t)
 {
 	printk("Reading Gamepad..\n");
 	int val = ioread32(ioremap + GPIO_PC_DIN);
