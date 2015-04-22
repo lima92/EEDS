@@ -11,6 +11,7 @@
 #include <linux/cdev.h>
 #include <linux/types.h>
 #include <linux/fs.h>
+#include <linux/device.h>
 
 #include <asm/signal.h>
 
@@ -37,7 +38,8 @@ static ssize_t gp_write(struct file*, char* __user, size_t, loff_t*);
 
 uint32_t *err, *err_odd, *err_even, *handler;
 uint32_t *ioremap;
-
+struct class *gp_class;
+struct device *gp_device;
 dev_t *dev; //device number
 
 struct gamepad_dev{
@@ -100,9 +102,14 @@ static int __init gamepad_init(void)
 		printk("GPIO INPUT SUCCESS\n");
 	}
 
-	setup_GPIO();
 
+	//MOVE TO OPEN?
+	setup_GPIO();
 	setup_interrupts();
+
+	//Create device file
+	gp_class = class_create(THIS_MODULE, DEV_NAME);
+	gp_device = device_create(gp_class, NULL, dev, NULL, DEV_NAME);
 	return 0;
 }
 
