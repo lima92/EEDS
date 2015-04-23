@@ -8,6 +8,7 @@
 //Functions
 int init_game();
 int get_random_int(int min, int max);
+int check_collision(int x, int y);
 
 //Type definitions
 
@@ -27,7 +28,18 @@ int main(int argc, char *argv[])
 		exit(EXIT_SUCCESS);
 	}
 	draw_body_part(p1->head_x, p1->head_y, green);
-	draw_to_display(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0);
+	draw_body_part(p2->head_x, p2->head_y, red);
+	int running = 1;
+	while(running){
+		if (p1->head_x > SCREEN_WIDTH - 5){
+			draw_body_part(4, p1->head_y, green);
+			p1->head_x = 4;
+		}
+		else{
+			p1->head_x = p1->head_x + 4;
+			draw_body_part(p1->head_x, p1->head_y, green);
+		}
+	}
 	exit(EXIT_SUCCESS);
 }
 
@@ -42,6 +54,7 @@ int init_game()
 	}
 	p1->head_x = get_random_int(3, SCREEN_WIDTH / 2);
 	p1->head_y = get_random_int(3, SCREEN_HEIGHT / 2);
+	p1->dir = RIGHT;
 
 
 	//printf("HEAD X SHOULD BE RANDOM..%i\n AND TAIL X SHOULD BE AS RANDOM..%i\n", p1->head_x, p1->tail_x);
@@ -85,6 +98,7 @@ int init_game()
 
 	p2->head_x = get_random_int(SCREEN_WIDTH / 2, SCREEN_WIDTH - 3);
 	p2->head_y = get_random_int(SCREEN_HEIGHT / 2, SCREEN_HEIGHT - 3);
+	p2->dir = LEFT;
 
 	switch (p2->head_x % 4){
 		case 3:
@@ -123,3 +137,13 @@ int get_random_int(int min, int max){
 	//printf("Random number: %i\n", random);
 	return random;
 }
+
+
+/*int check_collision(int x, int y){
+	return frame[x][y] != bg_color;
+}*/
+
+
+
+
+
