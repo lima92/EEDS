@@ -138,10 +138,16 @@ int get_random_int(int min, int max){
 	return random;
 }
 
+/*
+void turn_player(player *p, turn t){
 
-/*int check_collision(int x, int y){
+}
+
+*/
+
+int check_collision(int x, int y){
 	return frame[x][y] != bg_color;
-}*/
+}
 
 
 
