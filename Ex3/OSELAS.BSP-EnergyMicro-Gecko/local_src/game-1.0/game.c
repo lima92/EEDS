@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h> // rand()
-
+#include <signal.h>
+#include <sys/types.h> // getpid()
+#include <unistd.h>  //getpid()
+#include <fcntl.h>  //F_SETOWN...
 #include "draw.h"
 
 
@@ -11,6 +14,8 @@ int get_random_int(int min, int max);
 int collides(int x, int y);
 int turn_player(player *p, turn t);
 int gamepad_init();
+void gamepad_exit();
+void input_handler(int sigio);
 
 //Type definitions
 
@@ -19,15 +24,15 @@ int gamepad_init();
 
 //Global variables
 player *p1, *p2;
-int err;
-FILE f*;
+int err, oflags;
+FILE *f;
 
 int main(int argc, char *argv[])
 {
 	srand(time(NULL));
 
 	err = draw_init();
-	if (!err){
+	if (err){
 		printf("failed to draw_init()");
 	}else{
 		printf("returned from draw_init()");
@@ -85,17 +90,36 @@ int gamepad_init(){
 		printf("Unable to open gamepad device!\n");
 		return -1;
 	}
+	signal(SIGIO, &input_handler);
+	fcntl(fileno(f), F_SETOWN, getpid());
+
+	oflags = fcntl(fileno(f), F_GETFL);
+
+	fcntl(fileno(f), F_SETFL, oflags | FASYNC);
+
+	
+
+	
+	
+
+
+
+	return 0;
+}
+
+void gamepad_exit(){
+	fclose(f);
+}
+
+void input_handler(int sigio){
+	
+	printf("Input Handler %i\n", sigio);
 
 	unsigned int buff[32];
 
 	fread(buff, 1, 1, f);
 
-	fclose(f);
-	printf("Finished reading gamepad device!\n");
-
-	
-	
-	return 0;
+	printf("Buffer value: %i\n", buff);
 }
 
 int init_game()
