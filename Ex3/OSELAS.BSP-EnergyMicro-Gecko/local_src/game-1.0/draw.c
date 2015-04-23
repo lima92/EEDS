@@ -30,7 +30,7 @@ void draw_body_part(int x, int y, uint16_t color);
 //Initialization function
 void draw_init()
 {
-	printf("Hello Kjetil, I'm game! v5\n");
+	printf("Hello Kjetil, I'm game! v10\n");
 
 	
 	current_color = white;
@@ -58,14 +58,29 @@ void draw_init()
 	draw_letter(_char_K, 5, 230, 100, current_color);
 	draw_letter(_char_E, 5, 260, 100, current_color);
 	draw_letter(_char_K, 5, 290, 100, current_color);
-	FILE* f;
-
-
-	char* buff = (char*) malloc(sizeof(char)*20);
-	freed(buff, 2, 1, f);
-	printf("%s\n", buff);
 
 	draw_to_display(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0);
+
+	printf("HEREWEGO\n");
+	FILE *f;
+
+	f = fopen("/dev/gamepad", "r");
+	printf("OPENED GAMEPAD!\n");
+
+	unsigned int buff[32];
+
+	if(f == NULL){
+		perror("Errororor");
+	}		
+	printf("fread");
+	
+	fread(buff, 1, 1, f);
+
+	printf("buff %s\n", buff);
+	
+	fclose(f);
+	printf("Done");
+	
 
 }
 

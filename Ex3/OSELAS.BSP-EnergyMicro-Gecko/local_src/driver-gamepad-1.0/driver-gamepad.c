@@ -9,11 +9,12 @@
 #include <linux/io.h>
 #include <linux/interrupt.h>
 #include <linux/cdev.h>
-#include <linux/types.h>
+#include <linux/types.h> //?
 #include <linux/fs.h>
 #include <linux/device.h>
 
 #include <asm/signal.h>
+#include <asm/uaccess.h>
 
 #include "efm32gg.h"
 
@@ -39,25 +40,26 @@ static ssize_t gp_write(struct file*, char* __user, size_t, loff_t*);
 uint32_t *err, *err_odd, *err_even, *handler;
 uint32_t *ioremap;
 
+
 static struct class *gp_class;
 static struct device *gp_device;
-dev_t *dev; //device number
+dev_t dev; //device number
+struct cdev gp_cdev;
+static int major;
 
-struct gamepad_dev{
+static struct gamepad_dev{
 	struct gamepad_qset *data;
 	int quantum;
 	int qset;
 	unsigned long size;
 	unsigned int acces_key;
 	struct semaphore sem;
-	struct cdev cdev;
+
 } gp_dev;
 
 struct file_operations gp_fops = {
 	.owner = THIS_MODULE,
 	.read = gp_read,
-//	.write = gp_write,
-//	.ioctl = gp_ioctl,
 	.open = gp_open,
 	.release = gp_release,
 };
@@ -67,12 +69,13 @@ struct file_operations gp_fops = {
 
 static int __init gamepad_init(void)
 {
-	printk("Hello World, here is your module: %c fucking v16\n", DEV_NAME);
+	printk("Hello World, here is your module: %c fucking v18\n", DEV_NAME);
 
 
-	int err_reg = alloc_chrdev_region(&dev, 0, 2, DEV_NAME);
-	printk("dev: %i\n",*dev);
+	int err_reg = alloc_chrdev_region(&dev, 0, 1, DEV_NAME);
+	printk("dev: %i\n",dev);
 
+	//major = MAJOR(*dev);
 	if(!err_reg){
 		printk("CharDev reg successfull\n");
 	}else{
@@ -82,10 +85,10 @@ static int __init gamepad_init(void)
 	}
 	
 
-	cdev_init(&gp_dev.cdev, &gp_fops);
-	gp_dev.cdev.owner = THIS_MODULE;
-	printk(KERN_NOTICE "gp_dev.cdev.owner: %i", *gp_dev.cdev.owner);
-	int err_cdev = cdev_add (&gp_dev.cdev, *dev, 1);
+	cdev_init(&gp_cdev, &gp_fops);
+	gp_cdev.owner = THIS_MODULE;
+	printk(KERN_NOTICE "gp_dev.cdev.owner: %i", *gp_cdev.owner);
+	int err_cdev = cdev_add(&gp_cdev, dev, 1);
 	if(err_cdev){
 		printk(KERN_NOTICE "Error %i adding dev%i", err_cdev, 0);
 	}else{
@@ -95,11 +98,18 @@ static int __init gamepad_init(void)
 	
 
 	//Create device file
-	int gp_class = class_create(THIS_MODULE, DEV_NAME);
-	printk("Created classfile");
-	device_create(gp_class, NULL, dev, NULL, DEV_NAME);
+	struct class *gp_class = class_create(THIS_MODULE, "gamepad-class");
 
-	err = request_mem_region(GPIO_PC_BASE + GPIO_PC_DIN, 32, DEV_NAME);
+	if(IS_ERR(gp_class)){
+		return -1;
+	}
+
+	printk("Created classfile\n");
+	struct device *devkok = device_create(gp_class, NULL, dev, NULL, DEV_NAME);
+	
+	pr_err("%s:%d error code %d\n", __func__, __LINE__, PTR_ERR(devkok));
+
+	err = request_mem_region(GPIO_PC_BASE, 4, DEV_NAME);
 	
 	if (*err == NULL){
 		printk("Failure\n");
@@ -121,7 +131,7 @@ static int gp_open(struct inode *inode, struct file *file)
 	
 	return 0;
 }
-
+		
 static int gp_release(struct inode* inode, struct file* file)
 {
 	printk("Closing Gamepad driver..\n\n");
@@ -129,23 +139,24 @@ static int gp_release(struct inode* inode, struct file* file)
 
 int setup_GPIO(void)
 {
-	ioremap = ioremap_nocache(GPIO_PC_BASE, 32);
+	//ioremap = GPIO_PC_BASE; //ioremap_nocache(GPIO_PC_BASE, 32);
 
-	iowrite32(0x33333333, ioremap + GPIO_PC_MODEL);
+	iowrite32(0x33333333,  GPIO_PC_MODEL);
 	printk("Set pin 0-7 for input...\n");
+	printk("MODEL: %i\n", ioread32(GPIO_PC_MODEL));
  //GPIO_PC_MODEL = 0x33333333;
-//DISWILLCRASH.PNG	iowrite32(0x000000ff, ioremap + GPIO_PC_DOUT);
-//	printk("Enable internal pull-up...\n");
+	iowrite32(0xff,  GPIO_PC_DOUT);
+	printk("Enable internal pull-up...\n");
   //GPIO_PC_DOUT = 0xFF;
-	iowrite32(0x22222222, ioremap + GPIO_EXTIPSELL);
+	iowrite32(0x22222222, GPIO_EXTIPSELL);
 	printk("Enable port C to handle the interrupt...\n");
   //GPIO_EXTIPSELL = 0x22222222;
-	iowrite32(0x000000ff, ioremap + GPIO_EXTIFALL);
+	iowrite32(0x000000ff,  GPIO_EXTIFALL);
 	printk("Set interrupt handling for 1->0 transitions...\n");
   //GPIO_EXTIFALL = 0xFF;
-	iowrite32(0x000000ff, ioremap + GPIO_EXTIRISE);
+	iowrite32(0x000000ff,  GPIO_EXTIRISE);
 	printk("Set interrupt handling for 0->1 transitions...\n");
-	iowrite32(0x000000ff, ioremap + GPIO_IEN);
+	iowrite32(0x000000ff,  GPIO_IEN);
 	printk("Enable interrupt generation...\n");
 	printk("GPIO AND GPIO INTERRUPTS ARE NOW SET UP!\n");
   //GPIO_IEN = 0xFF;
@@ -175,14 +186,21 @@ int setup_interrupts(void)
 }
 
 
-static ssize_t gp_read(struct file* file, char* __user user, size_t count, loff_t* loff_t)
+static ssize_t gp_read(struct file* file, char* __user buff, size_t count, loff_t* loff_t)
 {
 	printk("Reading Gamepad..\n");
-	int val = ioread32(ioremap + GPIO_PC_DIN);
+	uint16_t val = ioread16(GPIO_PC_DIN);
 	printk("Val = %i\n", val);
-	return 0;
+	int cp_err = copy_to_user(buff, &val, 1);
+	printk(KERN_INFO "cp_err: %i\n", cp_err);
+	if(cp_err){
+		return cp_err;
+	}else{
+		return 1;
+	} 
 }
 
+static irqreturn_t gpio_interrupt_handler();
 
 /*
  * template_cleanup - function to cleanup this module from kernel space
@@ -194,7 +212,7 @@ static ssize_t gp_read(struct file* file, char* __user user, size_t count, loff_
 static void __exit gamepad_cleanup(void)
 {
 	unregister_chrdev_region(0,2);
-	release_mem_region(ioremap + GPIO_PC_DIN, 32);
+	release_mem_region(GPIO_PC_DIN, 32);
 	printk("Short life for a small module...\n");
 }
 
