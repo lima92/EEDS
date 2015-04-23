@@ -33,7 +33,7 @@ void draw_background();
 //Initialization function
 int draw_init()
 {
-	printf("Hello Kjetil, I'm game! v11\n");
+	printf("Hello Kjetil, I'm game! v12\n");
 
 	
 	current_color = white;
@@ -49,7 +49,7 @@ int draw_init()
 		printf("Memory mapped successfully\n");
 	}
 
-
+	draw_background();
 	draw_frame();
 	printf("draw_frame done\n");
 	

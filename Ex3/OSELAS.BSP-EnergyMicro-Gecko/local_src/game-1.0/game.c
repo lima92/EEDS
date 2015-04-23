@@ -222,6 +222,7 @@ int turn_player(player *p, turn t){ // Might need to update tail_x/y
 			return -1;
 		}
 		else{
+			printf("Head_x %i\nHead_y %i\nHead_x - 1 %i\nHead_y + 2 %i\n", p->head_x, p->head_y, p->head_x - 1, p->head_y + 2);
 			draw_pixel(p->head_x - 1, p->head_y + 2, p->color);
 			draw_pixel(p->head_x, p->head_y + 2, p->color);
 			draw_pixel(p->head_x + 1, p->head_y + 2, p->color);
