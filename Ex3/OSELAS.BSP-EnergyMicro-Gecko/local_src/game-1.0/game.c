@@ -10,6 +10,7 @@ int init_game();
 int get_random_int(int min, int max);
 int collides(int x, int y);
 int turn_player(player *p, turn t);
+int gamepad_init();
 
 //Type definitions
 
@@ -19,6 +20,7 @@ int turn_player(player *p, turn t);
 //Global variables
 player *p1, *p2;
 int err;
+FILE f*;
 
 int main(int argc, char *argv[])
 {
@@ -76,6 +78,25 @@ int main(int argc, char *argv[])
 	exit(EXIT_SUCCESS);
 }
 
+int gamepad_init(){
+	
+	f = fopen(SCREEN_PATH, "r");
+	if (f){
+		printf("Unable to open gamepad device!\n");
+		return -1;
+	}
+
+	unsigned int buff[32];
+
+	fread(buff, 1, 1, f);
+
+	fclose(f);
+	printf("Finished reading gamepad device!\n");
+
+	
+	
+	return 0;
+}
 
 int init_game()
 {
