@@ -1,5 +1,19 @@
 #include <stdint.h>
 
+typedef enum {NORTH = 0, SOUTH = 1, WEST = 2, EAST = 3} direction;
+
+typedef enum {LEFT = 0, RIGHT = 1} turn;
+
+typedef struct player {
+	int head_x;
+	int head_y;
+	int tail_x;
+	int tail_y;
+	direction dir;
+	uint16_t color;
+} player;
+
+
 //Draws the framebuffer
 void draw_to_display(int width, int height, int dx, int dy);
 
@@ -19,7 +33,7 @@ void draw_letter(int letter[7][5], int size, int x, int y, uint16_t color);
 void draw_background_grid();
 
 //Draws bodypart of snake
-void draw_body_part(int x, int y, uint16_t color);
+void draw_body_part(player *p);
 
 void draw_frame();
 
@@ -32,18 +46,6 @@ void draw_background();
 #define SCREEN_SIZE SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(uint16_t)
 #define SCREEN_PATH "/dev/fb0"
 
-typedef enum {NORTH = 0, SOUTH = 1, WEST = 2, EAST = 3} direction;
-
-typedef enum {LEFT = 0, RIGHT = 1} turn;
-
-typedef struct player {
-	int head_x;
-	int head_y;
-	int tail_x;
-	int tail_y;
-	direction dir;
-	uint16_t color;
-} player;
 
 
 

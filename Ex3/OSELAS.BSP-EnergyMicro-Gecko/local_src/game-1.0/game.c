@@ -43,8 +43,8 @@ int main(int argc, char *argv[])
 		exit(EXIT_SUCCESS);
 	}
 	printf("PREBODY");
-	draw_body_part(p1->head_x, p1->head_y, p1->color);
-	draw_body_part(p2->head_x, p2->head_y, p2->color);
+	draw_body_part(p1);
+	draw_body_part(p2);
 	printf("POSTBODY");
 	gamepad_init();
 	int running = 1;
@@ -75,9 +75,10 @@ int main(int argc, char *argv[])
 					p1->head_x-=4;
 					break;
 			}
+			draw_body_part(p1);
 		}
 
-		draw_body_part(p1->head_x, p1->head_y, p1->color);
+		
 	}
 
 	exit(EXIT_SUCCESS);
@@ -222,10 +223,6 @@ int turn_player(player *p, turn t){ // Might need to update tail_x/y
 			return -1;
 		}
 		else{
-			printf("Head_x %i\nHead_y %i\nHead_x - 1 %i\nHead_y + 2 %i\n", p->head_x, p->head_y, p->head_x - 1, p->head_y + 2);
-			draw_pixel(p->head_x - 1, p->head_y + 2, p->color);
-			draw_pixel(p->head_x, p->head_y + 2, p->color);
-			draw_pixel(p->head_x + 1, p->head_y + 2, p->color);
 			p->head_y += 4;
 			p->dir = SOUTH;
 		}
@@ -236,9 +233,6 @@ int turn_player(player *p, turn t){ // Might need to update tail_x/y
 			return -1;
 		}
 		else{
-			draw_pixel(p->head_x - 1, p->head_y - 2, p->color);
-			draw_pixel(p->head_x, p->head_y - 2, p->color);
-			draw_pixel(p->head_x + 1, p->head_y - 2, p->color);
 			p->head_y -= 4;
 			p->dir = NORTH;
 		}
@@ -250,9 +244,6 @@ int turn_player(player *p, turn t){ // Might need to update tail_x/y
 			return -1;
 		}
 		else{
-			draw_pixel(p->head_x - 1, p->head_y - 2, p->color);
-			draw_pixel(p->head_x, p->head_y - 2, p->color);
-			draw_pixel(p->head_x + 1, p->head_y - 2, p->color);
 			p->head_y -= 4;
 			p->dir = NORTH;
 		}
@@ -263,9 +254,6 @@ int turn_player(player *p, turn t){ // Might need to update tail_x/y
 			return -1;
 		}
 		else{
-			draw_pixel(p->head_x - 1, p->head_y + 2, p->color);
-			draw_pixel(p->head_x, p->head_y + 2, p->color);
-			draw_pixel(p->head_x + 1, p->head_y + 2, p->color);
 			p->head_y += 4;
 			p->dir = SOUTH;
 		}
@@ -277,9 +265,6 @@ int turn_player(player *p, turn t){ // Might need to update tail_x/y
 			return -1;
 		}
 		else{
-			draw_pixel(p->head_x + 2, p->head_y - 1, p->color);
-			draw_pixel(p->head_x + 2, p->head_y, p->color);
-			draw_pixel(p->head_x + 2, p->head_y + 1, p->color);
 			p->head_x += 4;
 			p->dir = EAST;
 		}
@@ -290,9 +275,6 @@ int turn_player(player *p, turn t){ // Might need to update tail_x/y
 			return -1;
 		}
 		else{
-			draw_pixel(p->head_x - 2, p->head_y - 1, p->color);
-			draw_pixel(p->head_x - 2, p->head_y, p->color);
-			draw_pixel(p->head_x - 2, p->head_y + 1, p->color);
 			p->head_x -= 4;
 			p->dir = WEST;
 		}
@@ -304,9 +286,6 @@ int turn_player(player *p, turn t){ // Might need to update tail_x/y
 			return -1;
 		}
 		else{
-			draw_pixel(p->head_x - 2, p->head_y - 1, p->color);
-			draw_pixel(p->head_x - 2, p->head_y, p->color);
-			draw_pixel(p->head_x - 2, p->head_y + 1, p->color);
 			p->head_x -= 4;
 			p->dir = WEST;
 		}
@@ -317,13 +296,11 @@ int turn_player(player *p, turn t){ // Might need to update tail_x/y
 			return -1;
 		}
 		else{
-			draw_pixel(p->head_x + 2, p->head_y - 1, p->color);
-			draw_pixel(p->head_x + 2, p->head_y, p->color);
-			draw_pixel(p->head_x + 2, p->head_y + 1, p->color);
 			p->head_x += 4;
 			p->dir = EAST;
 		}
 	}
+	draw_body_part(p);
 	return 0;
 
 }
