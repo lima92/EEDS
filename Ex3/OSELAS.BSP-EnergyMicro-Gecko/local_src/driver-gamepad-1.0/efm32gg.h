@@ -21,6 +21,7 @@
 #define GPIO_EXTIRISE  0x108
 #define GPIO_EXTIFALL  0x10c
 #define GPIO_IEN       0x110
+#define GPIO_IF	       0x114
 #define GPIO_IFC       0x11c
 
 

@@ -9,7 +9,7 @@
 #include <linux/io.h>
 #include <linux/interrupt.h>
 #include <linux/cdev.h>
-#include <linux/types.h> //?
+#include <linux/types.h>
 #include <linux/fs.h>
 #include <linux/device.h>
 
@@ -60,7 +60,6 @@ static struct gamepad_dev{
 	unsigned long size;
 	unsigned int acces_key;
 	struct semaphore sem;
-
 } gp_dev;
 
 struct file_operations gp_fops = {
@@ -73,11 +72,11 @@ struct file_operations gp_fops = {
 irqreturn_t gpio_interrupt_handler(int irq, void *dev_id, struct pt_regs *regs)
 {
 	printk("Handling GPIO interrupt..\n");
+	iowrite16(ioread16(irq_remap + GPIO_IF - GPIO_EXTIPSELL), irq_remap + GPIO_IFC - GPIO_EXTIPSELL);
 
 	uint16_t button_state = ioread16(ioremap + GPIO_PC_DIN);
 
 	//clear interrupt flag
-	iowrite16(button_state, irq_remap + GPIO_IFC - GPIO_EXTIPSELL);
 	printk("Button state: %i\n", button_state);
 	return IRQ_HANDLED;
 }
@@ -86,7 +85,6 @@ irqreturn_t gpio_interrupt_handler(int irq, void *dev_id, struct pt_regs *regs)
 static int __init gamepad_init(void)
 {
 	printk("Hello World, here is your module: %c fucking v18\n", DEV_NAME);
-
 
 	int err_reg = alloc_chrdev_region(&dev, 0, 1, DEV_NAME);
 	printk("dev: %i\n",dev);
@@ -100,7 +98,6 @@ static int __init gamepad_init(void)
 		return err_reg;
 	}
 	
-
 	cdev_init(&gp_cdev, &gp_fops);
 	gp_cdev.owner = THIS_MODULE;
 	printk(KERN_NOTICE "gp_dev.cdev.owner: %i", *gp_cdev.owner);
@@ -110,7 +107,6 @@ static int __init gamepad_init(void)
 	}else{
 		printk(KERN_NOTICE "cdev added successfully!\n");
 	}
-
 	
 	//Create device file
 	struct class *gp_class = class_create(THIS_MODULE, "gamepad-class");
@@ -164,13 +160,13 @@ int setup_GPIO(void)
 	iowrite32(0x33333333, ioremap + GPIO_PC_MODEL);
 	printk("Set pin 0-7 for input...\n");
 	printk("MODEL: %i\n", ioread32(ioremap + GPIO_PC_MODEL));
- //GPIO_PC_MODEL = 0x33333333;
+ 	//GPIO_PC_MODEL = 0x33333333;
 	iowrite32(0xff, ioremap + GPIO_PC_DOUT);
 	printk("Enable internal pull-up...\n");
-  //GPIO_PC_DOUT = 0xFF;
+  	//GPIO_PC_DOUT = 0xFF;
 
 	printk("GPIO ARE NOW SET UP!\n\n");
-  //GPIO_IEN = 0xFF;
+  	//GPIO_IEN = 0xFF;
 	return 0;
 }
 
@@ -208,11 +204,13 @@ int setup_interrupts(void)
 	if(err_even){
 		printk(KERN_INFO "can't get assigned irq 17\n");
 	}
+
 	//request GPIO_ODD IRQ line (nr18)
 	err_odd = request_irq(18, gpio_interrupt_handler, NULL, DEV_NAME, NULL);
 	if(err_odd){
 		printk(KERN_INFO "can't get assigned irq 18\n");
 	}
+
 	//GPIO_IEN = 0xFF;
 	iowrite32(0xff,  irq_remap + GPIO_IEN - GPIO_EXTIPSELL);
 	printk("Enable interrupt generation...\n%i\n", ioread32(irq_remap + GPIO_IEN - GPIO_EXTIPSELL));
