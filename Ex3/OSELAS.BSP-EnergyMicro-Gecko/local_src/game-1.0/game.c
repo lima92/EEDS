@@ -94,12 +94,22 @@ int gamepad_init(){
 		printf("ERROR: Unable to open gamepad device!\n");
 		return -1;
 	}
-	signal(SIGIO, &input_handler);
-	fcntl(fileno(f), F_SETOWN, getpid());
+	if (signal(SIGIO, &input_handler) == SIG_ERR){
+		printf("Could not register device...\n");
+		return -1;
+	}
+
+	if (fcntl(fileno(f), F_SETOWN, getpid()) == -1){
+		printf("Could not be set as owner..\n");
+		return -1;
+	}
 
 	oflags = fcntl(fileno(f), F_GETFL);
 
-	fcntl(fileno(f), F_SETFL, oflags | FASYNC);
+	if(fcntl(fileno(f), F_SETFL, oflags | FASYNC) == -1){
+		printf("Could not set flag...\n");
+		return -1;
+	}
 
 	return 0;
 }
