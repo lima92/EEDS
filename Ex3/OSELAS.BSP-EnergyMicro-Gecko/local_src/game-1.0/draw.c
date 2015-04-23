@@ -70,7 +70,6 @@ void draw_to_display(int width, int height, int dx, int dy)
 	rect.height = height;
 
 	int err = ioctl(fbfd, 0x4680, &rect);
-	printf("ioctl %i\n", err);
 	return 0;
 }
 
@@ -115,52 +114,32 @@ void draw_body_part(player *p){
 			draw_pixel(p->head_x + j, p->head_y + i, p->color);
 		}
 	}
-
-	if (p->dir == EAST){
+	//NORTH
+	if (p->dir == NORTH){
 			draw_pixel(p->head_x - 1, p->head_y + 2, p->color);
 			draw_pixel(p->head_x, p->head_y + 2, p->color);
 			draw_pixel(p->head_x + 1, p->head_y + 2, p->color);
 	}
+	//SOUTH
+	else if (p->dir == SOUTH){
+			draw_pixel(p->head_x - 1, p->head_y - 2, p->color);
+			draw_pixel(p->head_x, p->head_y - 2, p->color);
+			draw_pixel(p->head_x + 1, p->head_y - 2, p->color);
+	}
+	//WEST
+	else if (p->dir == WEST){
+			draw_pixel(p->head_x + 2, p->head_y - 1, p->color);
+			draw_pixel(p->head_x + 2, p->head_y, p->color);
+			draw_pixel(p->head_x + 2, p->head_y + 1, p->color);
+	}
+	//EAST
 	else if (p->dir == EAST){
-			draw_pixel(p->head_x - 1, p->head_y - 2, p->color);
-			draw_pixel(p->head_x, p->head_y - 2, p->color);
-			draw_pixel(p->head_x + 1, p->head_y - 2, p->color);
-	}
-
-	else if (p->dir == WEST){
-			draw_pixel(p->head_x - 1, p->head_y - 2, p->color);
-			draw_pixel(p->head_x, p->head_y - 2, p->color);
-			draw_pixel(p->head_x + 1, p->head_y - 2, p->color);
-	}
-	else if (p->dir == WEST){
-			draw_pixel(p->head_x - 1, p->head_y + 2, p->color);
-			draw_pixel(p->head_x, p->head_y + 2, p->color);
-			draw_pixel(p->head_x + 1, p->head_y + 2, p->color);
-	}
-
-	else if (p->dir == NORTH){
-			draw_pixel(p->head_x + 2, p->head_y - 1, p->color);
-			draw_pixel(p->head_x + 2, p->head_y, p->color);
-			draw_pixel(p->head_x + 2, p->head_y + 1, p->color);
-	}
-	else if (p->dir == NORTH){
 			draw_pixel(p->head_x - 2, p->head_y - 1, p->color);
 			draw_pixel(p->head_x - 2, p->head_y, p->color);
 			draw_pixel(p->head_x - 2, p->head_y + 1, p->color);
 	}
-
-	else if (p->dir == SOUTH){
-			draw_pixel(p->head_x - 2, p->head_y - 1, p->color);
-			draw_pixel(p->head_x - 2, p->head_y, p->color);
-			draw_pixel(p->head_x - 2, p->head_y + 1, p->color);
-	}
-	else if (p->dir == SOUTH){
-			draw_pixel(p->head_x + 2, p->head_y - 1, p->color);
-			draw_pixel(p->head_x + 2, p->head_y, p->color);
-			draw_pixel(p->head_x + 2, p->head_y + 1, p->color);
-	}
-
-	draw_to_display(5, 5, p->head_x - 2, p->head_y - 2);
+	//Do not understand why (5, 5, x - 2, y - 2) does not work.
+	draw_to_display(8, 8, p->head_x - 3, p->head_y - 3);
 }
 
 void draw_frame(){

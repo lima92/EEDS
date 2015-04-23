@@ -14,6 +14,7 @@
 #include <linux/device.h>
 
 #include <asm/signal.h>
+#include <asm/siginfo.h>
 #include <asm/uaccess.h>
 
 #include "efm32gg.h"
@@ -39,6 +40,7 @@ int setup_interrupts();
 static int gp_open(struct inode*, struct file*);
 static int gp_release(struct inode*, struct file*);
 static ssize_t gp_read(struct file*, char* __user, size_t, loff_t*);
+static int gp_fasync(int, struct file*, int);
 
 uint32_t *err, *err_odd, *err_even, *handler;
 
@@ -49,9 +51,8 @@ static struct class *gp_class;
 static struct device *gp_device;
 dev_t dev; //device number
 struct cdev gp_cdev;
-static int major;
-
 struct fasync_struct *fasync;
+static int major;
 
 static struct gamepad_dev{
 	struct gamepad_qset *data;
@@ -60,6 +61,7 @@ static struct gamepad_dev{
 	unsigned long size;
 	unsigned int acces_key;
 	struct semaphore sem;
+	
 } gp_dev;
 
 struct file_operations gp_fops = {
@@ -67,18 +69,27 @@ struct file_operations gp_fops = {
 	.read = gp_read,
 	.open = gp_open,
 	.release = gp_release,
+	.fasync = gp_fasync,
 };
 
 irqreturn_t gpio_interrupt_handler(int irq, void *dev_id, struct pt_regs *regs)
 {
 	printk("Handling GPIO interrupt..\n");
 	iowrite16(ioread16(irq_remap + GPIO_IF - GPIO_EXTIPSELL), irq_remap + GPIO_IFC - GPIO_EXTIPSELL);
-
 	uint16_t button_state = ioread16(ioremap + GPIO_PC_DIN);
+
+	if(fasync){
+		kill_fasync(&fasync, SIGIO, POLL_IN);
+	}
 
 	//clear interrupt flag
 	printk("Button state: %i\n", button_state);
 	return IRQ_HANDLED;
+}
+
+static int gp_fasync(int fd, struct file *filp, int mode)
+{
+	return fasync_helper(fd, filp, mode, fasync);
 }
 
 //INIT gamepad

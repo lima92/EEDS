@@ -5,6 +5,7 @@
 #include <sys/types.h> // getpid()
 #include <unistd.h>  //getpid()
 #include <fcntl.h>  //F_SETOWN...
+//#include <linux/err.h>
 #include "draw.h"
 
 
@@ -89,8 +90,8 @@ int main(int argc, char *argv[])
 int gamepad_init(){
 	
 	f = fopen(SCREEN_PATH, "r");
-	if (f){
-		printf("Unable to open gamepad device!\n");
+	if (!f){
+		printf("ERROR: Unable to open gamepad device!\n");
 		return -1;
 	}
 	signal(SIGIO, &input_handler);
