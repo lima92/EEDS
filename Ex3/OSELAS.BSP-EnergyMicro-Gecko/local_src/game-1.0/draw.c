@@ -13,7 +13,7 @@
 //Global variables
 static struct fb_copyarea rect;
 static int fbfd;
-//static uint16_t* frame;
+static uint16_t* frame;
 static uint16_t current_color;
 
 
@@ -26,6 +26,8 @@ void draw_init();
 void draw_letter(int letter[7][5], int size, int x, int y, uint16_t color);
 void draw_background_grid();
 void draw_body_part(int x, int y, uint16_t color);
+uint16_t get_buffer_color(x, y);
+void draw_frame();
 
 //Initialization function
 void draw_init()
@@ -47,10 +49,13 @@ void draw_init()
 	int i, j;
 	for (i = 0; i < (int)SCREEN_WIDTH; i++){
 		for (j = 0; j < (int)SCREEN_HEIGHT; j++){
-			draw_pixel(i, j, current_color);
+			draw_pixel(i, j, bg_color);
 		}
 	}
-	current_color = black;
+
+	draw_frame();
+
+	current_color = red;
 //	draw_background_grid();
 	
 	draw_letter(_char_A, 1, 100, 100, current_color);
@@ -159,6 +164,16 @@ void draw_body_part(int x, int y, uint16_t color){
 	draw_to_display(3, 3, x - 1, y - 1);
 }
 
+void draw_frame(){
+	int i, j;
+	for (i = 0; i < SCREEN_HEIGHT; i++){
+		for (j = 0; j < SCREEN_WIDTH; j++){
+			if (i < 2 || j < 2 || i > SCREEN_HEIGHT - 2 || j > SCREEN_WIDTH - 2){
+				draw_pixel(j, i, frame_color);
+			}
+		}
+	}
+}
 
 void draw_background_grid()
 {
@@ -176,5 +191,6 @@ void draw_background_grid()
 	}
 }
 
-
-
+uint16_t get_buffer_color(x, y){
+	return frame[y * SCREEN_WIDTH + x];
+}
