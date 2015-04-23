@@ -43,45 +43,47 @@ int main(int argc, char *argv[])
 		exit(EXIT_SUCCESS);
 	}
 	printf("PREBODY");
-	draw_body_part(p1->head_x, p1->head_y, green);
-	draw_body_part(p2->head_x, p2->head_y, red);
+	draw_body_part(p1->head_x, p1->head_y, p1->color);
+	draw_body_part(p2->head_x, p2->head_y, p2->color);
 	printf("POSTBODY");
+	gamepad_init();
 	int running = 1;
 	int turn_err, rand2;
 	turn t;
 	int ctr = 0;
 	while(ctr < 100){
 		ctr++;
-			if(ctr % 5 == 0){
-			printf("Head_X before turn: %i\n", p1->head_x);
+		if(ctr % 5 == 0){
 			rand2 = get_random_int(0,2);
-			printf("Random: %i\n", rand2);
 			turn_err = turn_player(p1, rand2);
-			printf("Head_X after turn: %i\n\n\n", p1->head_x);
 			if(turn_err == -1){
 				break;
-			}}else{
-				switch(p1->dir){
-					case(NORTH):
-						p1->head_y-=4;
-						break;
-					case(SOUTH):
-						p1->head_y+=4;
-						break;
-					case(EAST):
-						p1->head_x+=4;
-						break;
-					case(WEST):
-						p1->head_x-=4;
-						break;
-				}
 			}
+		}
+		else{
+			switch(p1->dir){
+				case(NORTH):
+					p1->head_y-=4;
+					break;
+				case(SOUTH):
+					p1->head_y+=4;
+					break;
+				case(EAST):
+					p1->head_x+=4;
+					break;
+				case(WEST):
+					p1->head_x-=4;
+					break;
+			}
+		}
 
-			draw_body_part(p1->head_x, p1->head_y, green);
+		draw_body_part(p1->head_x, p1->head_y, p1->color);
 	}
 
 	exit(EXIT_SUCCESS);
 }
+
+
 
 int gamepad_init(){
 	
@@ -96,13 +98,6 @@ int gamepad_init(){
 	oflags = fcntl(fileno(f), F_GETFL);
 
 	fcntl(fileno(f), F_SETFL, oflags | FASYNC);
-
-	
-
-	
-	
-
-
 
 	return 0;
 }
@@ -133,6 +128,7 @@ int init_game()
 	p1->head_x = get_random_int(3, SCREEN_WIDTH / 2);
 	p1->head_y = get_random_int(3, SCREEN_HEIGHT / 2);
 	p1->dir = EAST;
+	p1->color = green;
 
 
 	//printf("HEAD X SHOULD BE RANDOM..%i\n AND TAIL X SHOULD BE AS RANDOM..%i\n", p1->head_x, p1->tail_x);
@@ -177,6 +173,7 @@ int init_game()
 	p2->head_x = get_random_int(SCREEN_WIDTH / 2, SCREEN_WIDTH - 3);
 	p2->head_y = get_random_int(SCREEN_HEIGHT / 2, SCREEN_HEIGHT - 3);
 	p2->dir = WEST;
+	p2->color = red;
 
 	switch (p2->head_x % 4){
 		case 3:
@@ -225,6 +222,9 @@ int turn_player(player *p, turn t){ // Might need to update tail_x/y
 			return -1;
 		}
 		else{
+			draw_pixel(p->head_x - 1, p->head_y + 2, p->color);
+			draw_pixel(p->head_x, p->head_y + 2, p->color);
+			draw_pixel(p->head_x + 1, p->head_y + 2, p->color);
 			p->head_y += 4;
 			p->dir = SOUTH;
 		}
@@ -235,6 +235,9 @@ int turn_player(player *p, turn t){ // Might need to update tail_x/y
 			return -1;
 		}
 		else{
+			draw_pixel(p->head_x - 1, p->head_y - 2, p->color);
+			draw_pixel(p->head_x, p->head_y - 2, p->color);
+			draw_pixel(p->head_x + 1, p->head_y - 2, p->color);
 			p->head_y -= 4;
 			p->dir = NORTH;
 		}
@@ -246,6 +249,9 @@ int turn_player(player *p, turn t){ // Might need to update tail_x/y
 			return -1;
 		}
 		else{
+			draw_pixel(p->head_x - 1, p->head_y - 2, p->color);
+			draw_pixel(p->head_x, p->head_y - 2, p->color);
+			draw_pixel(p->head_x + 1, p->head_y - 2, p->color);
 			p->head_y -= 4;
 			p->dir = NORTH;
 		}
@@ -256,6 +262,9 @@ int turn_player(player *p, turn t){ // Might need to update tail_x/y
 			return -1;
 		}
 		else{
+			draw_pixel(p->head_x - 1, p->head_y + 2, p->color);
+			draw_pixel(p->head_x, p->head_y + 2, p->color);
+			draw_pixel(p->head_x + 1, p->head_y + 2, p->color);
 			p->head_y += 4;
 			p->dir = SOUTH;
 		}
@@ -267,6 +276,9 @@ int turn_player(player *p, turn t){ // Might need to update tail_x/y
 			return -1;
 		}
 		else{
+			draw_pixel(p->head_x + 2, p->head_y - 1, p->color);
+			draw_pixel(p->head_x + 2, p->head_y, p->color);
+			draw_pixel(p->head_x + 2, p->head_y + 1, p->color);
 			p->head_x += 4;
 			p->dir = EAST;
 		}
@@ -277,6 +289,9 @@ int turn_player(player *p, turn t){ // Might need to update tail_x/y
 			return -1;
 		}
 		else{
+			draw_pixel(p->head_x - 2, p->head_y - 1, p->color);
+			draw_pixel(p->head_x - 2, p->head_y, p->color);
+			draw_pixel(p->head_x - 2, p->head_y + 1, p->color);
 			p->head_x -= 4;
 			p->dir = WEST;
 		}
@@ -288,6 +303,9 @@ int turn_player(player *p, turn t){ // Might need to update tail_x/y
 			return -1;
 		}
 		else{
+			draw_pixel(p->head_x - 2, p->head_y - 1, p->color);
+			draw_pixel(p->head_x - 2, p->head_y, p->color);
+			draw_pixel(p->head_x - 2, p->head_y + 1, p->color);
 			p->head_x -= 4;
 			p->dir = WEST;
 		}
@@ -298,6 +316,9 @@ int turn_player(player *p, turn t){ // Might need to update tail_x/y
 			return -1;
 		}
 		else{
+			draw_pixel(p->head_x + 2, p->head_y - 1, p->color);
+			draw_pixel(p->head_x + 2, p->head_y, p->color);
+			draw_pixel(p->head_x + 2, p->head_y + 1, p->color);
 			p->head_x += 4;
 			p->dir = EAST;
 		}

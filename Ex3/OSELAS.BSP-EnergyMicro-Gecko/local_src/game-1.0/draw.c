@@ -28,6 +28,7 @@ void draw_background_grid();
 void draw_body_part(int x, int y, uint16_t color);
 uint16_t get_buffer_color(int x,int y);
 void draw_frame();
+void draw_background();
 
 //Initialization function
 int draw_init()
@@ -47,46 +48,14 @@ int draw_init()
 	}else{
 		printf("Memory mapped successfully\n");
 	}
-	int i, j;
-	for (i = 0; i < (int)SCREEN_WIDTH; i++){
-		for (j = 0; j < (int)SCREEN_HEIGHT; j++){
-			draw_pixel(i, j, bg_color);
-		}
-	}
+
 
 	draw_frame();
 	printf("draw_frame done\n");
-	current_color = red;
+	
 //	draw_background_grid();
 	
-	draw_letter(_char_A, 1, 100, 100, current_color);
-	draw_letter(_char_N, 1, 107, 100, current_color);
-	draw_letter(_char_D, 1, 114, 100, current_color);
-	draw_letter(_char_E, 1, 121, 100, current_color);
-	draw_letter(_char_R, 1, 128, 100, current_color);
-	draw_letter(_char_S, 1, 135, 100, current_color);
-	draw_letter(_char_L, 1, 145, 100, current_color);
-	draw_letter(_char_I, 1, 152, 100, current_color);
-	draw_letter(_char_M, 1, 159, 100, current_color);
-	draw_letter(_char_A, 1, 166, 100, current_color);
-
-	draw_letter(_char_K, 1, 100, 110, current_color);
-	draw_letter(_char_J, 1, 107, 110, current_color);
-	draw_letter(_char_E, 1, 114, 110, current_color);
-	draw_letter(_char_T, 1, 121, 110, current_color);
-	draw_letter(_char_I, 1, 128, 110, current_color);
-	draw_letter(_char_L, 1, 135, 110, current_color);
-	draw_letter(_char_A, 1, 145, 110, current_color);
-	draw_letter(_char_U, 1, 152, 110, current_color);
-	draw_letter(_char_N, 1, 159, 110, current_color);
-	draw_letter(_char_E, 1, 166, 110, current_color);
 	
-	draw_letter(_char_T, 1, 100, 200, current_color);
-	draw_letter(_char_I, 1, 130, 200, current_color);
-	draw_letter(_char_P, 1, 160, 200, current_color);
-	draw_letter(_char_K, 1, 230, 200, current_color);
-	draw_letter(_char_A, 1, 260, 200, current_color);
-	draw_letter(_char_K, 1, 290, 200, current_color);
 	printf("predraw\n");
 	draw_to_display(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0);
 	printf("End of draw_init()");
@@ -166,7 +135,7 @@ void draw_background_grid()
 
 	for (i = 0; i < SCREEN_HEIGHT; i++){
 		for (j = 0; j < SCREEN_WIDTH; j++){
-			if (i % 4 == 2 || j % 4 == 2 || i < 2 || j < 2 || i > SCREEN_HEIGHT - 2 || j > SCREEN_WIDTH - 2){
+			if (i % 4 == 2 || j % 4 == 2 || i < 2 || j < 2 || i > SCREEN_HEIGHT - 4 || j > SCREEN_WIDTH - 4){
 				draw_pixel(j, i, white);
 			}
 			else{
@@ -179,3 +148,56 @@ void draw_background_grid()
 uint16_t get_buffer_color(int x,int y){
 	return frame[y * SCREEN_WIDTH + x];
 }
+
+
+void draw_background(){
+	
+	int i, j;
+	for (i = 0; i < (int)SCREEN_WIDTH; i++){
+		for (j = 0; j < (int)SCREEN_HEIGHT; j++){
+			draw_pixel(i, j, bg_color);
+		}
+	}
+
+	current_color = dark_gray;
+
+	draw_letter(_char_A, 1, 127, 115, current_color);
+	draw_letter(_char_N, 1, 134, 115, current_color);
+	draw_letter(_char_D, 1, 141, 115, current_color);
+	draw_letter(_char_E, 1, 148, 115, current_color);
+	draw_letter(_char_R, 1, 155, 115, current_color);
+	draw_letter(_char_S, 1, 165, 115, current_color);
+	draw_letter(_char_L, 1, 172, 115, current_color);
+	draw_letter(_char_I, 1, 179, 115, current_color);
+	draw_letter(_char_M, 1, 186, 115, current_color);
+	draw_letter(_char_A, 1, 193, 115, current_color);
+
+	draw_letter(_char_K, 1, 127, 125, current_color);
+	draw_letter(_char_J, 1, 134, 125, current_color);
+	draw_letter(_char_E, 1, 141, 125, current_color);
+	draw_letter(_char_T, 1, 148, 125, current_color);
+	draw_letter(_char_I, 1, 155, 125, current_color);
+	draw_letter(_char_L, 1, 165, 125, current_color);
+	draw_letter(_char_A, 1, 172, 125, current_color);
+	draw_letter(_char_U, 1, 179, 125, current_color);
+	draw_letter(_char_N, 1, 186, 125, current_color);
+	draw_letter(_char_E, 1, 193, 125, current_color);
+	
+	draw_letter(_char_T, 1, 260, 220, current_color);
+	draw_letter(_char_I, 1, 267, 220, current_color);
+	draw_letter(_char_P, 1, 274, 220, current_color);
+	draw_letter(_char_S, 1, 288, 220, current_color);
+	draw_letter(_char_N, 1, 295, 220, current_color);
+	draw_letter(_char_E, 1, 302, 220, current_color);
+	draw_letter(_char_K, 1, 309, 220, current_color);
+}
+
+
+
+
+
+
+
+
+
+

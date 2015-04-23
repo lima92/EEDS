@@ -23,6 +23,8 @@ void draw_body_part(int x, int y, uint16_t color);
 
 void draw_frame();
 
+void draw_background();
+
 
 //System constants
 #define SCREEN_WIDTH 320
@@ -40,6 +42,7 @@ typedef struct player {
 	int tail_x;
 	int tail_y;
 	direction dir;
+	uint16_t color;
 } player;
 
 
@@ -48,6 +51,7 @@ static uint16_t red = (31 << 11) + (0 << 5) + (0 << 0);
 static uint16_t green = (0 << 11) + (63 << 5) + (0 << 0);
 static uint16_t blue = (0 << 11) + (0 << 5) + (31 << 0);
 static uint16_t pink = (30 << 11) + (36 << 5) + (31 << 0);
+static uint16_t dark_gray = (11 << 11) + (22 << 5) + (11 << 0);
 static uint16_t black = (0 << 11) + (0 << 5) + (0 << 0);
 static uint16_t white = (31 << 11) + (63 << 5) + (31 << 0);
 static uint16_t bg_color = (0 << 11) + (0 << 5) + (0 << 0);
