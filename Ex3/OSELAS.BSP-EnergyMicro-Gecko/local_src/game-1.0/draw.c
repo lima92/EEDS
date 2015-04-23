@@ -22,30 +22,31 @@ static uint16_t current_color;
 void draw_to_display(int width, int height, int dx, int dy);
 void draw_pixel(int x, int y, uint16_t color);
 void draw_row(int row, uint16_t color);
-void draw_init();
+int draw_init();
 void draw_letter(int letter[7][5], int size, int x, int y, uint16_t color);
 void draw_background_grid();
 void draw_body_part(int x, int y, uint16_t color);
-uint16_t get_buffer_color(x, y);
+uint16_t get_buffer_color(int x,int y);
 void draw_frame();
 
 //Initialization function
-void draw_init()
+int draw_init()
 {
-	printf("Hello Kjetil, I'm game! v10\n");
+	printf("Hello Kjetil, I'm game! v11\n");
 
 	
 	current_color = white;
 	
 
 	fbfd = open(SCREEN_PATH, O_RDWR);
-
+	printf("Open success\n");
 	frame = (uint16_t*) mmap(NULL, SCREEN_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fbfd, 0);
-
+	printf("Frame: %i\n", *frame);
 	if (frame == MAP_FAILED){
-		printf("Memory mapping failed!");
+		printf("Memory mapping failed!\n");
+	}else{
+		printf("Memory mapped successfully\n");
 	}
-	
 	int i, j;
 	for (i = 0; i < (int)SCREEN_WIDTH; i++){
 		for (j = 0; j < (int)SCREEN_HEIGHT; j++){
@@ -54,7 +55,7 @@ void draw_init()
 	}
 
 	draw_frame();
-
+	printf("draw_frame done\n");
 	current_color = red;
 //	draw_background_grid();
 	
@@ -84,40 +85,24 @@ void draw_init()
 	draw_letter(_char_I, 1, 130, 200, current_color);
 	draw_letter(_char_P, 1, 160, 200, current_color);
 	draw_letter(_char_K, 1, 230, 200, current_color);
-	draw_letter(_char_E, 1, 260, 200, current_color);
+	draw_letter(_char_A, 1, 260, 200, current_color);
 	draw_letter(_char_K, 1, 290, 200, current_color);
+	printf("predraw\n");
 	draw_to_display(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0);
-
-	printf("HEREWEGO\n");
-	FILE *f;
-	f = fopen("/dev/gamepad", "r");
-	printf("OPENED GAMEPAD!\n");
-
-	unsigned int buff[32];
-
-	if(f == NULL){
-		perror("Errororor");
-	}		
-	printf("fread");
-	
-	fread(buff, 1, 1, f);
-
-	printf("buff %s\n", buff);
-	
-	fclose(f);
-	printf("Done");
-	
-
+	printf("End of draw_init()");
+	return 0;
 }
 
 void draw_to_display(int width, int height, int dx, int dy)
 {
 	rect.dx = dx;
 	rect.dy = dy;
-	rect.width = SCREEN_WIDTH;
-	rect.height = SCREEN_HEIGHT;
+	rect.width = width;
+	rect.height = height;
 
-	ioctl(fbfd, 0x4680, &rect);
+	int err = ioctl(fbfd, 0x4680, &rect);
+	printf("ioctl %i\n", err);
+	return 0;
 }
 
 void draw_pixel(int x, int y, uint16_t color)
@@ -191,6 +176,6 @@ void draw_background_grid()
 	}
 }
 
-uint16_t get_buffer_color(x, y){
+uint16_t get_buffer_color(int x,int y){
 	return frame[y * SCREEN_WIDTH + x];
 }

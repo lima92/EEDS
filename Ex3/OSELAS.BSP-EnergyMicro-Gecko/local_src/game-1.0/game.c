@@ -22,27 +22,57 @@ int err;
 
 int main(int argc, char *argv[])
 {
-	draw_init();
+	srand(time(NULL));
+
+	err = draw_init();
+	if (!err){
+		printf("failed to draw_init()");
+	}else{
+		printf("returned from draw_init()");
+	}
 	err = init_game();
 	if (err == -1){
 		printf("Could not initialize game. Exit...");
 		exit(EXIT_SUCCESS);
 	}
+	printf("PREBODY");
 	draw_body_part(p1->head_x, p1->head_y, green);
 	draw_body_part(p2->head_x, p2->head_y, red);
+	printf("POSTBODY");
 	int running = 1;
 	int turn_err, rand2;
 	turn t;
-	while(running){
-		
-		rand2 = get_random_int(0,2);
+	int ctr = 0;
+	while(ctr < 100){
+		ctr++;
+			if(ctr % 5 == 0){
+			printf("Head_X before turn: %i\n", p1->head_x);
+			rand2 = get_random_int(0,2);
+			printf("Random: %i\n", rand2);
+			turn_err = turn_player(p1, rand2);
+			printf("Head_X after turn: %i\n\n\n", p1->head_x);
+			if(turn_err == -1){
+				break;
+			}}else{
+				switch(p1->dir){
+					case(NORTH):
+						p1->head_y-=4;
+						break;
+					case(SOUTH):
+						p1->head_y+=4;
+						break;
+					case(EAST):
+						p1->head_x+=4;
+						break;
+					case(WEST):
+						p1->head_x-=4;
+						break;
+				}
+			}
 
-		turn_err = turn_player(&p1, t = rand2);
-		if(turn_err == -1){
-			break;
-		}
-		draw_body_part(p1->head_x, p1->head_y, green);
+			draw_body_part(p1->head_x, p1->head_y, green);
 	}
+
 	exit(EXIT_SUCCESS);
 }
 
@@ -61,7 +91,7 @@ int init_game()
 
 
 	//printf("HEAD X SHOULD BE RANDOM..%i\n AND TAIL X SHOULD BE AS RANDOM..%i\n", p1->head_x, p1->tail_x);
-	
+
 
 
 	switch (p1->head_x % 4){
@@ -135,7 +165,6 @@ int init_game()
 }
 
 int get_random_int(int min, int max){
-	srand(time(NULL));
 	int random = ((rand() % max) + min);
 	//printf("Random number: %i\n", random);
 	return random;
@@ -144,6 +173,7 @@ int get_random_int(int min, int max){
 
 int turn_player(player *p, turn t){ // Might need to update tail_x/y
 
+	printf("Turning:%i, %i\n",p->dir,t); 
 	if (p->dir == EAST && t == RIGHT){
 		if (collides(p->head_x, p->head_y + 4)){
 			printf("COLLIDES!!!");
