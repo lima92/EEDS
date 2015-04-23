@@ -34,20 +34,24 @@ struct resource *gpio_irq;
 int setup_GPIO();
 int setup_interrupts();
 
+//static irqreturn_t gpio_interrupt_handler(int irq, void *dev_id, struct pt_regs *regs);
+
 static int gp_open(struct inode*, struct file*);
 static int gp_release(struct inode*, struct file*);
 static ssize_t gp_read(struct file*, char* __user, size_t, loff_t*);
-static ssize_t gp_write(struct file*, char* __user, size_t, loff_t*);
 
 uint32_t *err, *err_odd, *err_even, *handler;
-void *ioremap;
 
+void *ioremap;
+void *irq_remap;
 
 static struct class *gp_class;
 static struct device *gp_device;
 dev_t dev; //device number
 struct cdev gp_cdev;
 static int major;
+
+struct fasync_struct *fasync;
 
 static struct gamepad_dev{
 	struct gamepad_qset *data;
@@ -66,7 +70,17 @@ struct file_operations gp_fops = {
 	.release = gp_release,
 };
 
+irqreturn_t gpio_interrupt_handler(int irq, void *dev_id, struct pt_regs *regs)
+{
+	printk("Handling GPIO interrupt..\n");
 
+	uint16_t button_state = ioread16(ioremap + GPIO_PC_DIN);
+
+	//clear interrupt flag
+	iowrite16(button_state, irq_remap + GPIO_IFC - GPIO_EXTIPSELL);
+	printk("Button state: %i\n", button_state);
+	return IRQ_HANDLED;
+}
 
 //INIT gamepad
 static int __init gamepad_init(void)
@@ -98,7 +112,6 @@ static int __init gamepad_init(void)
 	}
 
 	
-
 	//Create device file
 	struct class *gp_class = class_create(THIS_MODULE, "gamepad-class");
 
@@ -155,17 +168,8 @@ int setup_GPIO(void)
 	iowrite32(0xff, ioremap + GPIO_PC_DOUT);
 	printk("Enable internal pull-up...\n");
   //GPIO_PC_DOUT = 0xFF;
-	iowrite32(0x22222222, ioremap + GPIO_EXTIPSELL);
-	printk("Enable port C to handle the interrupt...\n");
-  //GPIO_EXTIPSELL = 0x22222222;
-	iowrite32(0xff,  ioremap + GPIO_EXTIFALL);
-	printk("Set interrupt handling for 1->0 transitions...\n");
-  //GPIO_EXTIFALL = 0xFF;
-	iowrite32(0xff,  ioremap + GPIO_EXTIRISE);
-	printk("Set interrupt handling for 0->1 transitions...\n");
-	iowrite32(0xff,  ioremap + GPIO_IEN);
-	printk("Enable interrupt generation...\n");
-	printk("GPIO AND GPIO INTERRUPTS ARE NOW SET UP!\n");
+
+	printk("GPIO ARE NOW SET UP!\n\n");
   //GPIO_IEN = 0xFF;
 	return 0;
 }
@@ -173,18 +177,48 @@ int setup_GPIO(void)
 
 int setup_interrupts(void)
 {
+	gpio_irq = request_mem_region(GPIO_PC_BASE + GPIO_EXTIPSELL, 32, DEV_NAME);
+	
+	if (IS_ERR(gpio_irq)){
+		printk("Failure\n");
+		return -1;
+	}
+	else{
+		printk("IRQ MEM REQUEST SUCCESS\n");
+	}
+
+	//ioremap = GPIO_PC_BASE; 
+	irq_remap = ioremap_nocache(GPIO_PA_BASE + GPIO_EXTIPSELL, 32);
+	if(IS_ERR(irq_remap)){return -1;}
+
+  	//GPIO_EXTIPSELL = 0x22222222;
+	iowrite32(0x22222222, irq_remap);
+	printk("Enable port C to handle the interrupt...\n%i\n", ioread32(irq_remap));
+
+	//GPIO_EXTIFALL = 0xFF;
+	iowrite32(0xff,  irq_remap + GPIO_EXTIFALL - GPIO_EXTIPSELL);
+	printk("Set interrupt handling for 1->0 transitions...\n%i\n", ioread32(irq_remap + GPIO_EXTIFALL - GPIO_EXTIPSELL));
+
+	//GPIO_EXTIRISE = 0xFF;
+	iowrite32(0xff,  irq_remap + GPIO_EXTIRISE - GPIO_EXTIPSELL);
+	printk("Set interrupt handling for 0->1 transitions...\n%i\n", ioread32(irq_remap + GPIO_EXTIRISE - GPIO_EXTIPSELL));
+
 	//request GPIO_EVEN IRQ line (nr17)
-	err_even = request_irq(17, *handler, NULL, DEV_NAME, NULL);
+	err_even = request_irq(17, gpio_interrupt_handler, NULL, DEV_NAME, NULL);
 	if(err_even){
 		printk(KERN_INFO "can't get assigned irq 17\n");
 	}
 	//request GPIO_ODD IRQ line (nr18)
-	err_odd = request_irq(18, *handler, NULL, DEV_NAME, NULL);
+	err_odd = request_irq(18, gpio_interrupt_handler, NULL, DEV_NAME, NULL);
 	if(err_odd){
 		printk(KERN_INFO "can't get assigned irq 18\n");
 	}
+	//GPIO_IEN = 0xFF;
+	iowrite32(0xff,  irq_remap + GPIO_IEN - GPIO_EXTIPSELL);
+	printk("Enable interrupt generation...\n%i\n", ioread32(irq_remap + GPIO_IEN - GPIO_EXTIPSELL));
+
 	if(!err_even && !err_odd){
-		printk(KERN_INFO "IRQ set up successfully");
+		printk(KERN_INFO "GPIO INTERRUPTS ARE NOW SET UP!\n\n");
 		return 0;
 	}else{
 		return -1;
@@ -207,7 +241,6 @@ static ssize_t gp_read(struct file* file, char* __user buff, size_t count, loff_
 	} 
 }
 
-static irqreturn_t gpio_interrupt_handler();
 
 /*
  * template_cleanup - function to cleanup this module from kernel space
