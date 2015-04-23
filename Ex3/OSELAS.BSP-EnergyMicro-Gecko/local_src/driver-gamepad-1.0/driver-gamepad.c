@@ -151,12 +151,12 @@ int setup_GPIO(void)
 	iowrite32(0x22222222, GPIO_EXTIPSELL);
 	printk("Enable port C to handle the interrupt...\n");
   //GPIO_EXTIPSELL = 0x22222222;
-	iowrite32(0x000000ff,  GPIO_EXTIFALL);
+	iowrite32(0xff,  GPIO_EXTIFALL);
 	printk("Set interrupt handling for 1->0 transitions...\n");
   //GPIO_EXTIFALL = 0xFF;
-	iowrite32(0x000000ff,  GPIO_EXTIRISE);
+	iowrite32(0xff,  GPIO_EXTIRISE);
 	printk("Set interrupt handling for 0->1 transitions...\n");
-	iowrite32(0x000000ff,  GPIO_IEN);
+	iowrite32(0xff,  GPIO_IEN);
 	printk("Enable interrupt generation...\n");
 	printk("GPIO AND GPIO INTERRUPTS ARE NOW SET UP!\n");
   //GPIO_IEN = 0xFF;

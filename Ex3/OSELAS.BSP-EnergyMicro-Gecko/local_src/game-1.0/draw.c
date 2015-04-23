@@ -51,14 +51,36 @@ void draw_init()
 		}
 	}
 	current_color = black;
-	draw_background_grid();
-	draw_letter(_char_T, 5, 100, 100, current_color);
-	draw_letter(_char_I, 5, 130, 100, current_color);
-	draw_letter(_char_P, 5, 160, 100, current_color);
-	draw_letter(_char_K, 5, 230, 100, current_color);
-	draw_letter(_char_E, 5, 260, 100, current_color);
-	draw_letter(_char_K, 5, 290, 100, current_color);
+//	draw_background_grid();
+	
+	draw_letter(_char_A, 1, 100, 100, current_color);
+	draw_letter(_char_N, 1, 107, 100, current_color);
+	draw_letter(_char_D, 1, 114, 100, current_color);
+	draw_letter(_char_E, 1, 121, 100, current_color);
+	draw_letter(_char_R, 1, 128, 100, current_color);
+	draw_letter(_char_S, 1, 135, 100, current_color);
+	draw_letter(_char_L, 1, 145, 100, current_color);
+	draw_letter(_char_I, 1, 152, 100, current_color);
+	draw_letter(_char_M, 1, 159, 100, current_color);
+	draw_letter(_char_A, 1, 166, 100, current_color);
 
+	draw_letter(_char_K, 1, 100, 110, current_color);
+	draw_letter(_char_J, 1, 107, 110, current_color);
+	draw_letter(_char_E, 1, 114, 110, current_color);
+	draw_letter(_char_T, 1, 121, 110, current_color);
+	draw_letter(_char_I, 1, 128, 110, current_color);
+	draw_letter(_char_L, 1, 135, 110, current_color);
+	draw_letter(_char_A, 1, 145, 110, current_color);
+	draw_letter(_char_U, 1, 152, 110, current_color);
+	draw_letter(_char_N, 1, 159, 110, current_color);
+	draw_letter(_char_E, 1, 166, 110, current_color);
+	
+	draw_letter(_char_T, 1, 100, 200, current_color);
+	draw_letter(_char_I, 1, 130, 200, current_color);
+	draw_letter(_char_P, 1, 160, 200, current_color);
+	draw_letter(_char_K, 1, 230, 200, current_color);
+	draw_letter(_char_E, 1, 260, 200, current_color);
+	draw_letter(_char_K, 1, 290, 200, current_color);
 	draw_to_display(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0);
 
 	printf("HEREWEGO\n");
