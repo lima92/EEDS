@@ -76,7 +76,17 @@ int main(int argc, char *argv[])
 				p2->next_turn = 0;
 			}else{
 				move_player(p2);
-			}	
+			}
+			if (collides(p1->head_x, p1->head_y)){
+				p1->color = pink;
+				draw_body_part(p1);
+				exit(EXIT_SUCCESS);
+			}
+			if (collides(p2->head_x, p2->head_y)){
+				p2->color = pink;
+				draw_body_part(p2);
+				exit(EXIT_SUCCESS);
+			}
 			draw_body_part(p1);
 			draw_body_part(p2);
 		}
