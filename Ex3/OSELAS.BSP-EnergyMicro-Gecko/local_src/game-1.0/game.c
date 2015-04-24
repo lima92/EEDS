@@ -233,7 +233,7 @@ int init_game()
 }
 
 int get_random_int(int min, int max){
-	int random = ((rand() % max) + min);
+	int random = ((rand() % (max - min)) + min);
 	//printf("Random number: %i\n", random);
 	return random;
 }
