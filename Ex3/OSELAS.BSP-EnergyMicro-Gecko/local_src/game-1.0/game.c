@@ -27,7 +27,7 @@ void input_handler(int sigio);
 player *p1, *p2;
 int err, oflags, gp_err;
 int f;
-static uint8_t input_raw;
+static uint8_t input_raw, state;
 
 int main(int argc, char *argv[])
 {
@@ -48,14 +48,16 @@ int main(int argc, char *argv[])
 	draw_body_part(p1);
 	draw_body_part(p2);
 	printf("POSTBODY\n");
+	state = 0;
 	gp_err = gamepad_init();
 	printf("GPERR: %i\n",gp_err);
 	int running = 1;
 	int turn_err, rand2;
 	turn t;
 	int ctr = 0;
-	while(ctr < 100){
-		ctr++;
+	while(1){
+		ctr = get_random_int(0,10);
+		/*ctr++;
 		if(ctr % 5 == 0){
 			rand2 = get_random_int(0,2);
 			turn_err = turn_player(p1, rand2);
@@ -79,7 +81,7 @@ int main(int argc, char *argv[])
 					break;
 			}
 			draw_body_part(p1);
-		}
+		}*/
 
 		
 	}
@@ -134,6 +136,12 @@ void input_handler(int sigio){
 	int cnt = read(f, (void*)&input_raw, sizeof(uint8_t));
 
 	printf("Buffer value: %i\n", input_raw);
+
+	state = ~state & (~input_raw);
+
+	printf("New state: %i\n", state);
+
+
 }
 
 int init_game()
