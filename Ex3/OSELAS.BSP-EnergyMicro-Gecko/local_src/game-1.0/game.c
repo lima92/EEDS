@@ -28,8 +28,7 @@ int setSnakeDir(uint8_t in);
 
 
 //Global variables
-struct timespec *rem;
-req->tv_nsec = 500;
+struct timespec tim = { .tv_sec = (long int) 0, .tv_nsec = 50000000L }, tim2;
 player *p1, *p2;
 int err, oflags, gp_err;
 int f;
@@ -61,9 +60,19 @@ int main(int argc, char *argv[])
 	int turn_err, rand2;
 	turn t;
 	int ctr = 0;
-	while(true){
-		const timespec *req = {tv_nsec = 500};
-		if(nanosleep(req, rem) == 0){
+	
+
+
+	while(1){
+
+			
+			if(nanosleep(&tim , &tim2) < 0 )   
+			   {
+			      printf("Nano sleep system call failed \n");
+			      //return -1;
+				tim.tv_sec = 0;
+				tim.tv_nsec = 50000000L;
+			   }
 
 			printf("p1 next: %i\n",	p1->next_turn);		
 			if(p1->next_turn){
@@ -92,11 +101,7 @@ int main(int argc, char *argv[])
 			}
 			draw_body_part(p1);
 			draw_body_part(p2);
-		}
-		else{
-			const timespec *reqt = {tv_nsec = rem->tv_nsec};
-			nanosleep(reqt, rem);		
-		}
+
 	}
 
 	exit(EXIT_SUCCESS);
@@ -153,9 +158,8 @@ void input_handler(int sigio){
 	state = ~state & (~input_raw);
 
 	setSnakeDir(state);
-	printf("New state: %i\n", state);
+	//printf("New state: %i\n", state);
 	state = 0;
-
 
 }
 
@@ -356,7 +360,6 @@ int turn_player(player *p){ // Might need to update tail_x/y
 			p->dir = EAST;
 		}
 	}
-	draw_body_part(p);
 	return 0;
 
 }
@@ -375,7 +378,6 @@ int setSnakeDir(uint8_t in)
 	}
 	return 0;
 }
-
 
 
 int collides(int x, int y){

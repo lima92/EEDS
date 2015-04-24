@@ -75,23 +75,21 @@ struct file_operations gp_fops = {
 
 irqreturn_t gpio_interrupt_handler(int irq, void *dev_id, struct pt_regs *regs)
 {
-	printk("Handling GPIO interrupt..\n");
+	//printk("Handling GPIO interrupt..\n");
+	//clear interrupt flag
 	iowrite16(ioread16(irq_remap + GPIO_IF - GPIO_EXTIPSELL), irq_remap + GPIO_IFC - GPIO_EXTIPSELL);
 	uint16_t button_state = ioread16(ioremap + GPIO_PC_DIN);
-
+	//Send signal
 	if(fasync){
 		kill_fasync(&fasync, SIGIO, POLL_IN);
 	}
-
-	//clear interrupt flag
-	printk("Button state: %i\n", button_state);
+	//printk("Button state: %i\n", button_state);
 	return IRQ_HANDLED;
 }
 
 static int gp_fasync(int fd, struct file *filp, int mode)
 {
-	printk("HERRO DIS IS FASYNC\n");
-
+	//printk("HERRO DIS IS FASYNC\n");
 	struct gamepad_dev *gp_dev = filp->private_data;
 
 	return fasync_helper(fd, filp, mode, &fasync);
@@ -100,7 +98,7 @@ static int gp_fasync(int fd, struct file *filp, int mode)
 //INIT gamepad
 static int __init gamepad_init(void)
 {
-	printk("Hello World, here is your module: %c fucking v18\n", DEV_NAME);
+	printk("Hello World, here is your module: %c speaking v18\n", DEV_NAME);
 
 	int err_reg = alloc_chrdev_region(&dev, 0, 1, DEV_NAME);
 	printk("dev: %i\n",dev);
@@ -172,7 +170,6 @@ int setup_GPIO(void)
 	ioremap = ioremap_nocache(GPIO_PC_BASE, 36);
 	if(IS_ERR(ioremap)){return -1;}
 	
-
 	iowrite32(0x33333333, ioremap + GPIO_PC_MODEL);
 	printk("Set pin 0-7 for input...\n");
 	printk("MODEL: %i\n", ioread32(ioremap + GPIO_PC_MODEL));

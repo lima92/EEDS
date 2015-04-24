@@ -116,27 +116,27 @@ void draw_body_part(player *p){
 	}
 	//NORTH
 	if (p->dir == NORTH){
-			draw_pixel(p->head_x - 1, p->head_y + 2, p->color);
-			draw_pixel(p->head_x, p->head_y + 2, p->color);
-			draw_pixel(p->head_x + 1, p->head_y + 2, p->color);
+			draw_pixel(p->head_x - 1, p->head_y + 2, p->color_dark);
+			draw_pixel(p->head_x, p->head_y + 2, p->color_dark);
+			draw_pixel(p->head_x + 1, p->head_y + 2, p->color_dark);
 	}
 	//SOUTH
 	else if (p->dir == SOUTH){
-			draw_pixel(p->head_x - 1, p->head_y - 2, p->color);
-			draw_pixel(p->head_x, p->head_y - 2, p->color);
-			draw_pixel(p->head_x + 1, p->head_y - 2, p->color);
+			draw_pixel(p->head_x - 1, p->head_y - 2, p->color_dark);
+			draw_pixel(p->head_x, p->head_y - 2, p->color_dark);
+			draw_pixel(p->head_x + 1, p->head_y - 2, p->color_dark);
 	}
 	//WEST
 	else if (p->dir == WEST){
-			draw_pixel(p->head_x + 2, p->head_y - 1, p->color);
-			draw_pixel(p->head_x + 2, p->head_y, p->color);
-			draw_pixel(p->head_x + 2, p->head_y + 1, p->color);
+			draw_pixel(p->head_x + 2, p->head_y - 1, p->color_dark);
+			draw_pixel(p->head_x + 2, p->head_y, p->color_dark);
+			draw_pixel(p->head_x + 2, p->head_y + 1, p->color_dark);
 	}
 	//EAST
 	else if (p->dir == EAST){
-			draw_pixel(p->head_x - 2, p->head_y - 1, p->color);
-			draw_pixel(p->head_x - 2, p->head_y, p->color);
-			draw_pixel(p->head_x - 2, p->head_y + 1, p->color);
+			draw_pixel(p->head_x - 2, p->head_y - 1, p->color_dark);
+			draw_pixel(p->head_x - 2, p->head_y, p->color_dark);
+			draw_pixel(p->head_x - 2, p->head_y + 1, p->color_dark);
 	}
 	//Do not understand why (5, 5, x - 2, y - 2) does not work.
 	draw_to_display(8, 8, p->head_x - 3, p->head_y - 3);
@@ -185,34 +185,34 @@ void draw_background(){
 
 	current_color = dark_gray;
 
-	draw_letter(_char_A, 1, 127, 115, current_color);
-	draw_letter(_char_N, 1, 134, 115, current_color);
-	draw_letter(_char_D, 1, 141, 115, current_color);
-	draw_letter(_char_E, 1, 148, 115, current_color);
-	draw_letter(_char_R, 1, 155, 115, current_color);
-	draw_letter(_char_S, 1, 162, 115, current_color);
-	draw_letter(_char_L, 1, 172, 115, current_color);
-	draw_letter(_char_I, 1, 179, 115, current_color);
-	draw_letter(_char_M, 1, 186, 115, current_color);
-	draw_letter(_char_A, 1, 193, 115, current_color);
+	draw_letter(_char_A, 1, 227, 115, current_color);
+	draw_letter(_char_N, 1, 234, 115, current_color);
+	draw_letter(_char_D, 1, 241, 115, current_color);
+	draw_letter(_char_E, 1, 248, 115, current_color);
+	draw_letter(_char_R, 1, 255, 115, current_color);
+	draw_letter(_char_S, 1, 262, 115, current_color);
+	draw_letter(_char_L, 1, 272, 115, current_color);
+	draw_letter(_char_I, 1, 279, 115, current_color);
+	draw_letter(_char_M, 1, 286, 115, current_color);
+	draw_letter(_char_A, 1, 293, 115, current_color);
 
-	draw_letter(_char_K, 1, 127, 125, current_color);
-	draw_letter(_char_J, 1, 134, 125, current_color);
-	draw_letter(_char_E, 1, 141, 125, current_color);
-	draw_letter(_char_T, 1, 148, 125, current_color);
-	draw_letter(_char_I, 1, 155, 125, current_color);
-	draw_letter(_char_L, 1, 162, 125, current_color);
-	draw_letter(_char_A, 1, 172, 125, current_color);
-	draw_letter(_char_U, 1, 179, 125, current_color);
-	draw_letter(_char_N, 1, 186, 125, current_color);
-	draw_letter(_char_E, 1, 193, 125, current_color);
+	draw_letter(_char_K, 1, 227, 125, current_color);
+	draw_letter(_char_J, 1, 234, 125, current_color);
+	draw_letter(_char_E, 1, 241, 125, current_color);
+	draw_letter(_char_T, 1, 248, 125, current_color);
+	draw_letter(_char_I, 1, 255, 125, current_color);
+	draw_letter(_char_L, 1, 262, 125, current_color);
+	draw_letter(_char_A, 1, 272, 125, current_color);
+	draw_letter(_char_U, 1, 279, 125, current_color);
+	draw_letter(_char_N, 1, 286, 125, current_color);
+	draw_letter(_char_E, 1, 293, 125, current_color);
 	
-	draw_letter(_char_T, 1, 240, 220, current_color);
-	draw_letter(_char_I, 1, 250, 220, current_color);
-	draw_letter(_char_P, 1, 260, 220, current_color);
-	draw_letter(_char_S, 1, 280, 220, current_color);
-	draw_letter(_char_N, 1, 290, 220, current_color);
-	draw_letter(_char_E, 1, 300, 220, current_color);
+	draw_letter(_char_T, 1, 160, 220, current_color);
+	draw_letter(_char_I, 1, 180, 220, current_color);
+	draw_letter(_char_P, 1, 200, 220, current_color);
+	draw_letter(_char_S, 1, 250, 220, current_color);
+	draw_letter(_char_N, 1, 270, 220, current_color);
+	draw_letter(_char_E, 1, 290, 220, current_color);
 	draw_letter(_char_K, 1, 310, 220, current_color);
 }
 
