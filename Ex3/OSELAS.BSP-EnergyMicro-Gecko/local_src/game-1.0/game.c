@@ -25,8 +25,9 @@ void input_handler(int sigio);
 
 //Global variables
 player *p1, *p2;
-int err, oflags;
-FILE *f;
+int err, oflags, gp_err;
+int f;
+static uint8_t input_raw;
 
 int main(int argc, char *argv[])
 {
@@ -43,11 +44,12 @@ int main(int argc, char *argv[])
 		printf("Could not initialize game. Exit...");
 		exit(EXIT_SUCCESS);
 	}
-	printf("PREBODY");
+	printf("PREBODY\n");
 	draw_body_part(p1);
 	draw_body_part(p2);
-	printf("POSTBODY");
-	gamepad_init();
+	printf("POSTBODY\n");
+	gp_err = gamepad_init();
+	printf("GPERR: %i\n",gp_err);
 	int running = 1;
 	int turn_err, rand2;
 	turn t;
@@ -89,7 +91,7 @@ int main(int argc, char *argv[])
 
 int gamepad_init(){
 	
-	f = fopen(SCREEN_PATH, "r");
+	f = open("/dev/gamepad", O_RDONLY | O_NONBLOCK);
 	if (!f){
 		printf("ERROR: Unable to open gamepad device!\n");
 		return -1;
@@ -99,15 +101,20 @@ int gamepad_init(){
 		return -1;
 	}
 
-	if (fcntl(fileno(f), F_SETOWN, getpid()) == -1){
+	if (fcntl(f, F_SETOWN, getpid()) == -1){
 		printf("Could not be set as owner..\n");
 		return -1;
 	}
 
-	oflags = fcntl(fileno(f), F_GETFL);
+	oflags = fcntl(f, F_GETFL) | FASYNC;
 
-	if(fcntl(fileno(f), F_SETFL, oflags | FASYNC) == -1){
+	if(fcntl(f, F_SETFL, oflags) == -1){
 		printf("Could not set flag...\n");
+		return -1;
+	}
+
+	if (fcntl(f, F_SETOWN, getpid()) == -1){
+		printf("Could not be set as owner..\n");
 		return -1;
 	}
 
@@ -115,18 +122,18 @@ int gamepad_init(){
 }
 
 void gamepad_exit(){
-	fclose(f);
+	close(f);
 }
 
 void input_handler(int sigio){
 	
 	printf("Input Handler %i\n", sigio);
 
-	unsigned int buff[32];
+	//unsigned int buff[32];
 
-	fread(buff, 1, 1, f);
+	int cnt = read(f, (void*)&input_raw, sizeof(uint8_t));
 
-	printf("Buffer value: %i\n", buff);
+	printf("Buffer value: %i\n", input_raw);
 }
 
 int init_game()

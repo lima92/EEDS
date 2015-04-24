@@ -55,7 +55,7 @@ struct fasync_struct *fasync;
 static int major;
 
 static struct gamepad_dev{
-	struct gamepad_qset *data;
+	struct gp_qset *data;
 	int quantum;
 	int qset;
 	unsigned long size;
@@ -63,6 +63,7 @@ static struct gamepad_dev{
 	struct semaphore sem;
 	
 } gp_dev;
+
 
 struct file_operations gp_fops = {
 	.owner = THIS_MODULE,
@@ -89,7 +90,11 @@ irqreturn_t gpio_interrupt_handler(int irq, void *dev_id, struct pt_regs *regs)
 
 static int gp_fasync(int fd, struct file *filp, int mode)
 {
-	return fasync_helper(fd, filp, mode, fasync);
+	printk("HERRO DIS IS FASYNC\n");
+
+	struct gamepad_dev *gp_dev = filp->private_data;
+
+	return fasync_helper(fd, filp, mode, &fasync);
 }
 
 //INIT gamepad
@@ -211,13 +216,13 @@ int setup_interrupts(void)
 	printk("Set interrupt handling for 0->1 transitions...\n%i\n", ioread32(irq_remap + GPIO_EXTIRISE - GPIO_EXTIPSELL));
 
 	//request GPIO_EVEN IRQ line (nr17)
-	err_even = request_irq(17, gpio_interrupt_handler, NULL, DEV_NAME, NULL);
+	err_even = request_irq(17, (irq_handler_t)gpio_interrupt_handler, 0, DEV_NAME, &gp_cdev);
 	if(err_even){
 		printk(KERN_INFO "can't get assigned irq 17\n");
 	}
 
 	//request GPIO_ODD IRQ line (nr18)
-	err_odd = request_irq(18, gpio_interrupt_handler, NULL, DEV_NAME, NULL);
+	err_odd = request_irq(18, (irq_handler_t)gpio_interrupt_handler, 0, DEV_NAME, &gp_cdev);
 	if(err_odd){
 		printk(KERN_INFO "can't get assigned irq 18\n");
 	}
@@ -241,12 +246,12 @@ static ssize_t gp_read(struct file* file, char* __user buff, size_t count, loff_
 	printk("Reading Gamepad..\n");
 	uint16_t val = ioread16(ioremap + GPIO_PC_DIN);
 	printk("Val = %i\n", val);
-	int cp_err = copy_to_user(buff, &val, 1);
-	printk(KERN_INFO "cp_err: %i\n", cp_err);
+	int cp_err = copy_to_user(buff, &val, count);
 	if(cp_err){
 		return cp_err;
+		printk(KERN_INFO "cp_err: %i\n", cp_err);
 	}else{
-		return 1;
+		return count;
 	} 
 }
 
