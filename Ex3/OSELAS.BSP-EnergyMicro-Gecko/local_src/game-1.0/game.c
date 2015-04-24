@@ -5,6 +5,7 @@
 #include <sys/types.h> // getpid()
 #include <unistd.h>  //getpid()
 #include <fcntl.h>  //F_SETOWN...
+#include <time.h> //nanosleep()
 //#include <linux/err.h>
 #include "draw.h"
 #include "buttons.h"
@@ -27,6 +28,8 @@ int setSnakeDir(uint8_t in);
 
 
 //Global variables
+struct timespec *rem;
+req->tv_nsec = 500;
 player *p1, *p2;
 int err, oflags, gp_err;
 int f;
@@ -58,10 +61,10 @@ int main(int argc, char *argv[])
 	int turn_err, rand2;
 	turn t;
 	int ctr = 0;
-	while(ctr < 10000000){
-		int lol = get_random_int(0,10);
-		ctr++;
-		if(ctr % 5000 == 0){
+	while(true){
+		const timespec *req = {tv_nsec = 500};
+		if(nanosleep(req, rem) == 0){
+
 			printf("p1 next: %i\n",	p1->next_turn);		
 			if(p1->next_turn){
 				turn_player(p1);
@@ -90,7 +93,10 @@ int main(int argc, char *argv[])
 			draw_body_part(p1);
 			draw_body_part(p2);
 		}
-		
+		else{
+			const timespec *reqt = {tv_nsec = rem->tv_nsec};
+			nanosleep(reqt, rem);		
+		}
 	}
 
 	exit(EXIT_SUCCESS);
