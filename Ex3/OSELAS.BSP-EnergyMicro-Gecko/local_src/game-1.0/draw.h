@@ -2,7 +2,7 @@
 
 typedef enum {NORTH = 0, SOUTH = 1, WEST = 2, EAST = 3} direction;
 
-typedef enum {LEFT = 0, RIGHT = 1} turn;
+typedef enum {LEFT = 1, RIGHT = 2, NONE = 0} turn;
 
 typedef struct player {
 	int head_x;
@@ -10,6 +10,7 @@ typedef struct player {
 	int tail_x;
 	int tail_y;
 	direction dir;
+	turn next_turn;
 	uint16_t color;
 } player;
 

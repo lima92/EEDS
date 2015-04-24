@@ -190,7 +190,7 @@ void draw_background(){
 	draw_letter(_char_D, 1, 141, 115, current_color);
 	draw_letter(_char_E, 1, 148, 115, current_color);
 	draw_letter(_char_R, 1, 155, 115, current_color);
-	draw_letter(_char_S, 1, 165, 115, current_color);
+	draw_letter(_char_S, 1, 162, 115, current_color);
 	draw_letter(_char_L, 1, 172, 115, current_color);
 	draw_letter(_char_I, 1, 179, 115, current_color);
 	draw_letter(_char_M, 1, 186, 115, current_color);
@@ -201,19 +201,19 @@ void draw_background(){
 	draw_letter(_char_E, 1, 141, 125, current_color);
 	draw_letter(_char_T, 1, 148, 125, current_color);
 	draw_letter(_char_I, 1, 155, 125, current_color);
-	draw_letter(_char_L, 1, 165, 125, current_color);
+	draw_letter(_char_L, 1, 162, 125, current_color);
 	draw_letter(_char_A, 1, 172, 125, current_color);
 	draw_letter(_char_U, 1, 179, 125, current_color);
 	draw_letter(_char_N, 1, 186, 125, current_color);
 	draw_letter(_char_E, 1, 193, 125, current_color);
 	
-	draw_letter(_char_T, 1, 260, 220, current_color);
-	draw_letter(_char_I, 1, 267, 220, current_color);
-	draw_letter(_char_P, 1, 274, 220, current_color);
-	draw_letter(_char_S, 1, 288, 220, current_color);
-	draw_letter(_char_N, 1, 295, 220, current_color);
-	draw_letter(_char_E, 1, 302, 220, current_color);
-	draw_letter(_char_K, 1, 309, 220, current_color);
+	draw_letter(_char_T, 1, 240, 220, current_color);
+	draw_letter(_char_I, 1, 250, 220, current_color);
+	draw_letter(_char_P, 1, 260, 220, current_color);
+	draw_letter(_char_S, 1, 280, 220, current_color);
+	draw_letter(_char_N, 1, 290, 220, current_color);
+	draw_letter(_char_E, 1, 300, 220, current_color);
+	draw_letter(_char_K, 1, 310, 220, current_color);
 }
 
 

@@ -7,16 +7,19 @@
 #include <fcntl.h>  //F_SETOWN...
 //#include <linux/err.h>
 #include "draw.h"
+#include "buttons.h"
 
 
 //Functions
 int init_game();
 int get_random_int(int min, int max);
 int collides(int x, int y);
-int turn_player(player *p, turn t);
+int move_player(player *p);
+int turn_player(player *p);
 int gamepad_init();
 void gamepad_exit();
 void input_handler(int sigio);
+int setSnakeDir(uint8_t in);
 
 //Type definitions
 
@@ -55,34 +58,28 @@ int main(int argc, char *argv[])
 	int turn_err, rand2;
 	turn t;
 	int ctr = 0;
-	while(1){
-		ctr = get_random_int(0,10);
-		/*ctr++;
-		if(ctr % 5 == 0){
-			rand2 = get_random_int(0,2);
-			turn_err = turn_player(p1, rand2);
-			if(turn_err == -1){
-				break;
+	while(ctr < 10000000){
+		int lol = get_random_int(0,10);
+		ctr++;
+		if(ctr % 5000 == 0){
+			printf("p1 next: %i\n",	p1->next_turn);		
+			if(p1->next_turn){
+				turn_player(p1);
+				p1->next_turn = 0;
+			}else{
+				move_player(p1);
 			}
-		}
-		else{
-			switch(p1->dir){
-				case(NORTH):
-					p1->head_y-=4;
-					break;
-				case(SOUTH):
-					p1->head_y+=4;
-					break;
-				case(EAST):
-					p1->head_x+=4;
-					break;
-				case(WEST):
-					p1->head_x-=4;
-					break;
-			}
-			draw_body_part(p1);
-		}*/
 
+			printf("p1 next: %i\n",	p2->next_turn);
+			if(p2->next_turn){
+				turn_player(p2);
+				p2->next_turn = 0;
+			}else{
+				move_player(p2);
+			}	
+			draw_body_part(p1);
+			draw_body_part(p2);
+		}
 		
 	}
 
@@ -139,7 +136,9 @@ void input_handler(int sigio){
 
 	state = ~state & (~input_raw);
 
+	setSnakeDir(state);
 	printf("New state: %i\n", state);
+	state = 0;
 
 
 }
@@ -239,9 +238,24 @@ int get_random_int(int min, int max){
 	return random;
 }
 
-
-int turn_player(player *p, turn t){ // Might need to update tail_x/y
-
+int move_player(player *p){
+	switch(p->dir){
+		case(NORTH):
+			p->head_y-=4;
+			break;
+		case(SOUTH):
+			p->head_y+=4;
+			break;
+		case(EAST):
+			p->head_x+=4;
+			break;
+		case(WEST):
+			p->head_x-=4;
+			break;
+	}
+}
+int turn_player(player *p){ // Might need to update tail_x/y
+	int t = p->next_turn;
 	printf("Turning:%i, %i\n",p->dir,t); 
 	if (p->dir == EAST && t == RIGHT){
 		if (collides(p->head_x, p->head_y + 4)){
@@ -329,6 +343,21 @@ int turn_player(player *p, turn t){ // Might need to update tail_x/y
 	draw_body_part(p);
 	return 0;
 
+}
+
+int setSnakeDir(uint8_t in)
+{
+	printf("SnakeDir in: %i\n", in);
+	if(in & sw1){
+		p1->next_turn = 1;
+	}else if(in & sw4){
+		p1->next_turn = 2;
+	}else if(in & sw8){
+		p2->next_turn = 1;
+	}else if(in & sw7){
+		p2->next_turn = 2;
+	}
+	return 0;
 }
 
 
