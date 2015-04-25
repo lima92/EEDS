@@ -1,5 +1,5 @@
 /*
- * This is a demo Linux kernel module.
+ * This is a device driver for the gamepad used in TDT4258.
  */
 
 #include <linux/kernel.h>
@@ -19,14 +19,6 @@
 
 #include "efm32gg.h"
 
-/*
- * template_init - function to insert this module into kernel space
- *
- * This is the first of two exported functions to handle insert ga	ing this
- * code into a running kernel
- *
- * Returns 0 if successfull, otherwise -1
- */
 
 #define DEV_NAME "gamepad"
 
@@ -34,8 +26,8 @@ struct resource *gpio_pc;
 struct resource *gpio_irq;
 int setup_GPIO();
 int setup_interrupts();
-
-//static irqreturn_t gpio_interrupt_handler(int irq, void *dev_id, struct pt_regs *regs);
+void cleanup_GPIO();
+void cleanup_interrups();
 
 static int gp_open(struct inode*, struct file*);
 static int gp_release(struct inode*, struct file*);
@@ -52,7 +44,7 @@ static struct device *gp_device;
 dev_t dev; //device number
 struct cdev gp_cdev;
 struct fasync_struct *fasync;
-static int major;
+
 
 static struct gamepad_dev{
 	struct gp_qset *data;
@@ -64,7 +56,7 @@ static struct gamepad_dev{
 	
 } gp_dev;
 
-
+//IO operations supported by this device
 struct file_operations gp_fops = {
 	.owner = THIS_MODULE,
 	.read = gp_read,
@@ -76,6 +68,7 @@ struct file_operations gp_fops = {
 irqreturn_t gpio_interrupt_handler(int irq, void *dev_id, struct pt_regs *regs)
 {
 	//printk("Handling GPIO interrupt..\n");
+
 	//clear interrupt flag
 	iowrite16(ioread16(irq_remap + GPIO_IF - GPIO_EXTIPSELL), irq_remap + GPIO_IFC - GPIO_EXTIPSELL);
 	uint16_t button_state = ioread16(ioremap + GPIO_PC_DIN);
@@ -95,7 +88,14 @@ static int gp_fasync(int fd, struct file *filp, int mode)
 	return fasync_helper(fd, filp, mode, &fasync);
 }
 
-//INIT gamepad
+/*
+ * gamepad_init - function to insert this module into kernel space
+ *
+ * This is the first of two exported functions to handle insert ga	ing this
+ * code into a running kernel
+ *
+ * Returns 0 if successfull, otherwise -1
+ */
 static int __init gamepad_init(void)
 {
 	printk("Hello World, here is your module: %c speaking v18\n", DEV_NAME);
@@ -103,7 +103,6 @@ static int __init gamepad_init(void)
 	int err_reg = alloc_chrdev_region(&dev, 0, 1, DEV_NAME);
 	printk("dev: %i\n",dev);
 
-	//major = MAJOR(*dev);
 	if(!err_reg){
 		printk("CharDev reg successfull\n");
 	}else{
@@ -123,7 +122,7 @@ static int __init gamepad_init(void)
 	}
 	
 	//Create device file
-	struct class *gp_class = class_create(THIS_MODULE, "gamepad-class");
+	gp_class = class_create(THIS_MODULE, "gamepad-class");
 
 	if(IS_ERR(gp_class)){
 		return -1;
@@ -134,8 +133,6 @@ static int __init gamepad_init(void)
 	
 	pr_err("%s:%d error code %d\n", __func__, __LINE__, PTR_ERR(devkok));
 
-	int err_gpio = setup_GPIO();
-	int err_irq = setup_interrupts();
 	return 0;
 }
 
@@ -143,6 +140,18 @@ static int __init gamepad_init(void)
 static int gp_open(struct inode *inode, struct file *file)
 {
 	printk("Opening Gamepad driver..\n\n");	
+
+
+	if(IS_ERR(setup_GPIO())){
+		printk("GPIO setup failed!\n");
+		return -1;
+	}
+
+	if(IS_ERR(setup_interrupts())){
+		printk("GPIO Interrupt setup failed!\n");
+		return -1;
+	}
+
 	return 0;
 }
 
@@ -150,6 +159,10 @@ static int gp_open(struct inode *inode, struct file *file)
 static int gp_release(struct inode* inode, struct file* file)
 {
 	printk("Closing Gamepad driver..\n\n");
+
+	cleanup_GPIO();
+	cleanup_interrups();
+	
 	return 0;
 }
 
@@ -172,21 +185,20 @@ int setup_GPIO(void)
 	
 	iowrite32(0x33333333, ioremap + GPIO_PC_MODEL);
 	printk("Set pin 0-7 for input...\n");
-	printk("MODEL: %i\n", ioread32(ioremap + GPIO_PC_MODEL));
+	//printk("MODEL: %i\n", ioread32(ioremap + GPIO_PC_MODEL));
  	//GPIO_PC_MODEL = 0x33333333;
 	iowrite32(0xff, ioremap + GPIO_PC_DOUT);
 	printk("Enable internal pull-up...\n");
   	//GPIO_PC_DOUT = 0xFF;
 
 	printk("GPIO ARE NOW SET UP!\n\n");
-  	//GPIO_IEN = 0xFF;
 	return 0;
 }
 
 
 int setup_interrupts(void)
 {
-	gpio_irq = request_mem_region(GPIO_PC_BASE + GPIO_EXTIPSELL, 32, DEV_NAME);
+	gpio_irq = request_mem_region(GPIO_PA_BASE + GPIO_EXTIPSELL, 32, DEV_NAME);
 	
 	if (IS_ERR(gpio_irq)){
 		printk("Failure\n");
@@ -262,15 +274,55 @@ static ssize_t gp_read(struct file* file, char* __user buff, size_t count, loff_
 
 static void __exit gamepad_cleanup(void)
 {
+	printk("Cleaning up gamepad module");
+
+  	device_destroy(gp_class, gp_device);
+  	class_destroy(gp_class);
+
+  	cdev_del(&gp_cdev);
+
 	unregister_chrdev_region(0,1);
-	release_mem_region(ioremap, 36);
+
+	
 	printk("Short life for a small module...\n");
 }
 
+void cleanup_GPIO(){
+
+		iowrite32(0x00, ioremap + GPIO_PC_MODEL);
+		printk("UnSet pin 0-7 for input...\n");
+
+		iowrite32(0x00, ioremap + GPIO_PC_DOUT);
+		printk("Disable internal pull-up...\n");
+
+		printk("Releasing GPIO memory...\n")
+		iounmap(irq_remap)
+		release_mem_region(GPIO_PC_BASE, 36);
+}
+void cleanup_interrups(){
+
+		iowrite32(0x00,  irq_remap + GPIO_IEN - GPIO_EXTIPSELL);
+		printk("Disable interrupt generation...");
+
+		iowrite32(0x00, irq_remap);
+		printk("Disable port C to handle the interrupt...");
+
+		iowrite32(0x00,  irq_remap + GPIO_EXTIFALL - GPIO_EXTIPSELL);
+		printk("Disable interrupt handling for 1->0 transitions...");
+
+		iowrite32(0x00,  irq_remap + GPIO_EXTIRISE - GPIO_EXTIPSELL);
+		printk("Disable interrupt handling for 0->1 transitions...");
+
+		free_irq(17,NULL);
+		free_irq(18,NULL);
+
+		printk("Releasing GPIO Interrupt memory...\n")
+		iounmap(irq_remap)
+		release_mem_region(GPIO_PC_BASE + GPIO_EXTIPSELL, 32);
+}
 
 module_init(gamepad_init);
 module_exit(gamepad_cleanup);
 
-MODULE_DESCRIPTION("Small module, demo only, not very useful.");
+MODULE_DESCRIPTION("Module for eight button gamepad, used in tdt4258 at NTNU");
 MODULE_LICENSE("GPL");
-
