@@ -26,7 +26,6 @@ int setSnakeDir(uint8_t in);
 
 
 
-
 //Global variables
 struct timespec tim = { .tv_sec = (long int) 0, .tv_nsec = 50000000L }, tim2;
 player *p1, *p2;
@@ -49,10 +48,8 @@ int main(int argc, char *argv[])
 		printf("Could not initialize game. Exit...");
 		exit(EXIT_SUCCESS);
 	}
-	printf("PREBODY\n");
 	draw_body_part(p1);
 	draw_body_part(p2);
-	printf("POSTBODY\n");
 	state = 0;
 	gp_err = gamepad_init();
 	printf("GPERR: %i\n",gp_err);
@@ -74,7 +71,7 @@ int main(int argc, char *argv[])
 				tim.tv_nsec = 50000000L;
 			   }
 
-			printf("p1 next: %i\n",	p1->next_turn);		
+			//printf("p1 next: %i\n",	p1->next_turn);		
 			if(p1->next_turn){
 				turn_player(p1);
 				p1->next_turn = 0;
@@ -82,7 +79,7 @@ int main(int argc, char *argv[])
 				move_player(p1);
 			}
 
-			printf("p1 next: %i\n",	p2->next_turn);
+			//printf("p1 next: %i\n",	p2->next_turn);
 			if(p2->next_turn){
 				turn_player(p2);
 				p2->next_turn = 0;
@@ -175,7 +172,7 @@ int init_game()
 	p1->head_y = get_random_int(3, SCREEN_HEIGHT / 2);
 	p1->dir = EAST;
 	p1->color = green;
-
+	p1->color_dark = green_dark;
 
 	//printf("HEAD X SHOULD BE RANDOM..%i\n AND TAIL X SHOULD BE AS RANDOM..%i\n", p1->head_x, p1->tail_x);
 
@@ -220,6 +217,7 @@ int init_game()
 	p2->head_y = get_random_int(SCREEN_HEIGHT / 2, SCREEN_HEIGHT - 3);
 	p2->dir = WEST;
 	p2->color = red;
+	p2->color_dark = red_dark;
 
 	switch (p2->head_x % 4){
 		case 3:
@@ -381,7 +379,8 @@ int setSnakeDir(uint8_t in)
 
 
 int collides(int x, int y){
-	return get_buffer_color(x, y) != bg_color;
+	uint16_t buff_color = get_buffer_color(x, y);
+	return (buff_color != bg_color && buff_color != text_color);
 }
 
 

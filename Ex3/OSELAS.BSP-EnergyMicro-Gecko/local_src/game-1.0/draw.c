@@ -56,7 +56,7 @@ int draw_init()
 //	draw_background_grid();
 	
 	
-	printf("predraw\n");
+//	printf("predraw\n");
 	draw_to_display(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0);
 	printf("End of draw_init()");
 	return 0;
@@ -183,7 +183,8 @@ void draw_background(){
 		}
 	}
 
-	current_color = dark_gray;
+
+	current_color = text_color;
 
 	draw_letter(_char_A, 1, 227, 115, current_color);
 	draw_letter(_char_N, 1, 234, 115, current_color);
