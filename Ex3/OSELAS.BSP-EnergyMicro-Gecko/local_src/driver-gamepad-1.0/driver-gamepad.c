@@ -24,10 +24,10 @@
 
 struct resource *gpio_pc;
 struct resource *gpio_irq;
-int setup_GPIO();
-int setup_interrupts();
-void cleanup_GPIO();
-void cleanup_interrups();
+int setup_GPIO(void);
+int setup_interrupts(void);
+void cleanup_GPIO(void);
+void cleanup_interrups(void);
 
 static int gp_open(struct inode*, struct file*);
 static int gp_release(struct inode*, struct file*);
@@ -71,19 +71,20 @@ irqreturn_t gpio_interrupt_handler(int irq, void *dev_id, struct pt_regs *regs)
 
 	//clear interrupt flag
 	iowrite16(ioread16(irq_remap + GPIO_IF - GPIO_EXTIPSELL), irq_remap + GPIO_IFC - GPIO_EXTIPSELL);
-	uint16_t button_state = ioread16(ioremap + GPIO_PC_DIN);
+	//uint16_t button_state = ioread16(ioremap + GPIO_PC_DIN);
+	//printk("Button state: %i\n", button_state);
+
 	//Send signal
 	if(fasync){
 		kill_fasync(&fasync, SIGIO, POLL_IN);
 	}
-	//printk("Button state: %i\n", button_state);
 	return IRQ_HANDLED;
 }
 
 static int gp_fasync(int fd, struct file *filp, int mode)
 {
 	//printk("HERRO DIS IS FASYNC\n");
-	struct gamepad_dev *gp_dev = filp->private_data;
+	//struct gamepad_dev *gp_dev = filp->private_data;
 
 	return fasync_helper(fd, filp, mode, &fasync);
 }
@@ -98,7 +99,7 @@ static int gp_fasync(int fd, struct file *filp, int mode)
  */
 static int __init gamepad_init(void)
 {
-	printk("Hello World, here is your module: %c speaking v18\n", DEV_NAME);
+	printk("Hello World, here is your module: speaking v18\n");
 
 	int err_reg = alloc_chrdev_region(&dev, 0, 1, DEV_NAME);
 	printk("dev: %i\n",dev);
@@ -113,7 +114,7 @@ static int __init gamepad_init(void)
 	
 	cdev_init(&gp_cdev, &gp_fops);
 	gp_cdev.owner = THIS_MODULE;
-	printk(KERN_NOTICE "gp_dev.cdev.owner: %i", *gp_cdev.owner);
+	//printk(KERN_NOTICE "gp_dev.cdev.owner: %i", *gp_cdev.owner);
 	int err_cdev = cdev_add(&gp_cdev, dev, 1);
 	if(err_cdev){
 		printk(KERN_NOTICE "Error %i adding dev%i", err_cdev, 0);
@@ -302,19 +303,20 @@ void cleanup_GPIO(){
 void cleanup_interrups(){
 
 		iowrite32(0x00,  irq_remap + GPIO_IEN - GPIO_EXTIPSELL);
-		printk("Disable interrupt generation...");
-
-		iowrite32(0x00, irq_remap);
-		printk("Disable port C to handle the interrupt...");
-
-		iowrite32(0x00,  irq_remap + GPIO_EXTIFALL - GPIO_EXTIPSELL);
-		printk("Disable interrupt handling for 1->0 transitions...");
-
-		iowrite32(0x00,  irq_remap + GPIO_EXTIRISE - GPIO_EXTIPSELL);
-		printk("Disable interrupt handling for 0->1 transitions...");
+		printk("Disable interrupt generation...\n");
 
 		free_irq(17,NULL);
 		free_irq(18,NULL);
+
+		iowrite32(0x00, irq_remap);
+		printk("Disable port C to handle the interrupt...\n");
+
+		iowrite32(0x00,  irq_remap + GPIO_EXTIFALL - GPIO_EXTIPSELL);
+		printk("Disable interrupt handling for 1->0 transitions...\n");
+
+		iowrite32(0x00,  irq_remap + GPIO_EXTIRISE - GPIO_EXTIPSELL);
+		printk("Disable interrupt handling for 0->1 transitions...\n");
+
 
 		printk("Releasing GPIO Interrupt memory...\n");
 		iounmap(irq_remap);
