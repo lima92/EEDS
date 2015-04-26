@@ -29,6 +29,7 @@ void draw_body_part(player *p);
 uint16_t get_buffer_color(int x,int y);
 void draw_frame();
 void draw_background();
+void player_win(player* p);
 
 //Initialization function
 int draw_init()
@@ -217,8 +218,27 @@ void draw_background(){
 	draw_letter(_char_K, 1, 310, 220, current_color);
 }
 
+void player_win(player *p){
+	current_color = p->color_dark;
 
 
+	draw_letter(_char_P, 2, 100, 90, current_color);
+	draw_letter(_char_L, 2, 114, 90, current_color);
+	draw_letter(_char_A, 2, 128, 90, current_color);
+	draw_letter(_char_Y, 2, 142, 90, current_color);
+	draw_letter(_char_E, 2, 156, 90, current_color);
+	draw_letter(_char_R, 2, 170, 90, current_color);
+	if(current_color == green_dark){
+		draw_letter(_char_one, 2, 190, 90, current_color);
+	}else{
+		draw_letter(_char_two, 2, 190, 90, current_color);
+	}
+	draw_letter(_char_W, 2, 210, 90, current_color);
+	draw_letter(_char_I, 2, 224, 90, current_color);
+	draw_letter(_char_N, 2, 238, 90, current_color);
+	draw_letter(_char_S, 2, 252, 90, current_color);
+	draw_to_display(152, 14, 100, 90);
+}
 
 
 

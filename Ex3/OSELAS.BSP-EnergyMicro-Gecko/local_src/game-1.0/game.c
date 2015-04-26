@@ -21,6 +21,8 @@ int gamepad_init();
 void gamepad_exit();
 void input_handler(int sigio);
 int setSnakeDir(uint8_t in);
+void run_game();
+void start_game();
 
 //Type definitions
 
@@ -30,22 +32,34 @@ int setSnakeDir(uint8_t in);
 struct timespec tim = { .tv_sec = (long int) 0, .tv_nsec = 50000000L }, tim2;
 player *p1, *p2;
 int err, oflags, gp_err;
-int f;
+int f,run,restart;
 static uint8_t input_raw, state;
 
 int main(int argc, char *argv[])
-{
+{		
+	while(1){
+		restart = 0;
+		run_game();
+		while(restart == 0){
+			pause();
+		}
+	}
+	
+	exit(EXIT_SUCCESS);
+}
+
+void start_game(){
 	srand(time(NULL));
 
 	err = draw_init();
 	if (err){
-		printf("failed to draw_init()");
+		printf("failed to draw_init()\n");
 	}else{
-		printf("returned from draw_init()");
+		printf("returned from draw_init()\n");
 	}
 	err = init_game();
 	if (err == -1){
-		printf("Could not initialize game. Exit...");
+		printf("Could not initialize game. Exit...\n");
 		exit(EXIT_SUCCESS);
 	}
 	draw_body_part(p1);
@@ -53,55 +67,51 @@ int main(int argc, char *argv[])
 	state = 0;
 	gp_err = gamepad_init();
 	printf("GPERR: %i\n",gp_err);
-	int running = 1;
+	run = 1;
 	int turn_err, rand2;
 	turn t;
 	int ctr = 0;
-	
+}
 
+void run_game(){
+	start_game();
+	while(run==1){
+		if(nanosleep(&tim , &tim2) < 0 )   
+		   {
+		      printf("Nano sleep system call failed \n");
+		      //return -1;
+			tim.tv_sec = 0;
+			tim.tv_nsec = 50000000L;
+		   }
 
-	while(1){
+		//printf("p1 next: %i\n",	p1->next_turn);		
+		if(p1->next_turn){
+			turn_player(p1);
+			p1->next_turn = 0;
+		}else{
+			move_player(p1);
+		}
 
-			
-			if(nanosleep(&tim , &tim2) < 0 )   
-			   {
-			      printf("Nano sleep system call failed \n");
-			      //return -1;
-				tim.tv_sec = 0;
-				tim.tv_nsec = 50000000L;
-			   }
-
-			//printf("p1 next: %i\n",	p1->next_turn);		
-			if(p1->next_turn){
-				turn_player(p1);
-				p1->next_turn = 0;
-			}else{
-				move_player(p1);
-			}
-
-			//printf("p1 next: %i\n",	p2->next_turn);
-			if(p2->next_turn){
-				turn_player(p2);
-				p2->next_turn = 0;
-			}else{
-				move_player(p2);
-			}
-			if (collides(p1->head_x, p1->head_y)){
-				p1->color = pink;
-				draw_body_part(p1);
-				exit(EXIT_SUCCESS);
-			}
-			if (collides(p2->head_x, p2->head_y)){
-				p2->color = pink;
-				draw_body_part(p2);
-				exit(EXIT_SUCCESS);
-			}
-			draw_body_part(p1);
-			draw_body_part(p2);
-
+		//printf("p1 next: %i\n",	p2->next_turn);
+		if(p2->next_turn){
+			turn_player(p2);
+			p2->next_turn = 0;
+		}else{
+			move_player(p2);
+		}
+		if (collides(p1->head_x, p1->head_y)){
+			p1->color = pink;
+			run = 0;
+			player_win(p2);
+		}
+		if (collides(p2->head_x, p2->head_y)){
+			p2->color = pink;
+			run = 0;
+			player_win(p1);
+		}
+		draw_body_part(p1);
+		draw_body_part(p2);
 	}
-
-	exit(EXIT_SUCCESS);
 }
 
 
@@ -373,6 +383,9 @@ int setSnakeDir(uint8_t in)
 		p2->next_turn = 1;
 	}else if(in & sw7){
 		p2->next_turn = 2;
+	}else if(in & sw2){
+		restart = 1;
+		run = 1;
 	}
 	return 0;
 }
