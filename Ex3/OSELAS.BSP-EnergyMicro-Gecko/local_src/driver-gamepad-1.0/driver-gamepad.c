@@ -295,8 +295,8 @@ void cleanup_GPIO(){
 		iowrite32(0x00, ioremap + GPIO_PC_DOUT);
 		printk("Disable internal pull-up...\n");
 
-		printk("Releasing GPIO memory...\n")
-		iounmap(irq_remap)
+		printk("Releasing GPIO memory...\n");
+		iounmap(irq_remap);
 		release_mem_region(GPIO_PC_BASE, 36);
 }
 void cleanup_interrups(){
@@ -316,8 +316,8 @@ void cleanup_interrups(){
 		free_irq(17,NULL);
 		free_irq(18,NULL);
 
-		printk("Releasing GPIO Interrupt memory...\n")
-		iounmap(irq_remap)
+		printk("Releasing GPIO Interrupt memory...\n");
+		iounmap(irq_remap);
 		release_mem_region(GPIO_PC_BASE + GPIO_EXTIPSELL, 32);
 }
 
