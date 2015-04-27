@@ -32,15 +32,16 @@ void start_game();
 struct timespec tim = { .tv_sec = (long int) 0, .tv_nsec = 50000000L }, tim2;
 player *p1, *p2;
 int err, oflags, gp_err;
-int f,run,restart;
+int f,run,restart, quit;
 static uint8_t input_raw, state;
 
 int main(int argc, char *argv[])
 {		
-	while(1){
-		restart = 0;
+	quit = 1;
+	while(quit){
+		restart = 1;
 		run_game();
-		while(restart == 0){
+		while(restart && quit){
 			pause();
 		}
 	}
@@ -75,7 +76,7 @@ void start_game(){
 
 void run_game(){
 	start_game();
-	while(run==1){
+	while(run){
 		if(nanosleep(&tim , &tim2) < 0 )   
 		   {
 		      printf("Nano sleep system call failed \n");
@@ -384,8 +385,10 @@ int setSnakeDir(uint8_t in)
 	}else if(in & sw7){
 		p2->next_turn = 2;
 	}else if(in & sw2){
-		restart = 1;
+		restart = 0;
 		run = 1;
+	}else if(in & sw6){
+		quit = 0;
 	}
 	return 0;
 }

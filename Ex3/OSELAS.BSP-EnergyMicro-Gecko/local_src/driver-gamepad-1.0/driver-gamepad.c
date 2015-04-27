@@ -134,15 +134,6 @@ static int __init gamepad_init(void)
 	
 	pr_err("%s:%d error code %d\n", __func__, __LINE__, PTR_ERR(devkok));
 
-	return 0;
-}
-
-//Open gamepad
-static int gp_open(struct inode *inode, struct file *file)
-{
-	printk("Opening Gamepad driver..\n\n");	
-
-
 	if(IS_ERR(setup_GPIO())){
 		printk("GPIO setup failed!\n");
 		return -1;
@@ -156,14 +147,19 @@ static int gp_open(struct inode *inode, struct file *file)
 	return 0;
 }
 
+//Open gamepad
+static int gp_open(struct inode *inode, struct file *file)
+{
+	printk("Opening Gamepad driver..\n\n");	
+
+	return 0;
+}
+
 //Close gamepad		
 static int gp_release(struct inode* inode, struct file* file)
 {
 	printk("Closing Gamepad driver..\n\n");
 
-	cleanup_GPIO();
-	cleanup_interrups();
-	
 	return 0;
 }
 
@@ -277,6 +273,9 @@ static void __exit gamepad_cleanup(void)
 {
 	printk("Cleaning up gamepad module");
 
+	cleanup_GPIO();
+	cleanup_interrups();
+	
   	device_destroy(gp_class, gp_device);
   	class_destroy(gp_class);
 
