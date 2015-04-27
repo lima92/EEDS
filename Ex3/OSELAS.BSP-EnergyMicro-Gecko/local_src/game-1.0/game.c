@@ -6,7 +6,6 @@
 #include <unistd.h>  //getpid()
 #include <fcntl.h>  //F_SETOWN...
 #include <time.h> //nanosleep()
-//#include <linux/err.h>
 #include "draw.h"
 #include "buttons.h"
 
@@ -69,7 +68,7 @@ void start_game(){
 	gp_err = gamepad_init();
 	printf("GPERR: %i\n",gp_err);
 	run = 1;
-	int turn_err, rand2;
+	int turn_err;
 	turn t;
 	int ctr = 0;
 }
@@ -79,13 +78,11 @@ void run_game(){
 	while(run){
 		if(nanosleep(&tim , &tim2) < 0 )   
 		   {
-		      printf("Nano sleep system call failed \n");
-		      //return -1;
+		    printf("Nano sleep system call failed \n");
 			tim.tv_sec = 0;
 			tim.tv_nsec = 50000000L;
 		   }
 
-		//printf("p1 next: %i\n",	p1->next_turn);		
 		if(p1->next_turn){
 			turn_player(p1);
 			p1->next_turn = 0;
@@ -93,7 +90,6 @@ void run_game(){
 			move_player(p1);
 		}
 
-		//printf("p1 next: %i\n",	p2->next_turn);
 		if(p2->next_turn){
 			turn_player(p2);
 			p2->next_turn = 0;
@@ -157,8 +153,6 @@ void input_handler(int sigio){
 	
 	printf("Input Handler %i\n", sigio);
 
-	//unsigned int buff[32];
-
 	int cnt = read(f, (void*)&input_raw, sizeof(uint8_t));
 
 	printf("Buffer value: %i\n", input_raw);
@@ -166,7 +160,7 @@ void input_handler(int sigio){
 	state = ~state & (~input_raw);
 
 	setSnakeDir(state);
-	//printf("New state: %i\n", state);
+	
 	state = 0;
 
 }
@@ -184,9 +178,6 @@ int init_game()
 	p1->dir = EAST;
 	p1->color = green;
 	p1->color_dark = green_dark;
-
-	//printf("HEAD X SHOULD BE RANDOM..%i\n AND TAIL X SHOULD BE AS RANDOM..%i\n", p1->head_x, p1->tail_x);
-
 
 
 	switch (p1->head_x % 4){
@@ -263,7 +254,6 @@ int init_game()
 
 int get_random_int(int min, int max){
 	int random = ((rand() % (max - min)) + min);
-	//printf("Random number: %i\n", random);
 	return random;
 }
 
@@ -283,7 +273,7 @@ int move_player(player *p){
 			break;
 	}
 }
-int turn_player(player *p){ // Might need to update tail_x/y
+int turn_player(player *p){ 
 	int t = p->next_turn;
 	printf("Turning:%i, %i\n",p->dir,t); 
 	if (p->dir == EAST && t == RIGHT){

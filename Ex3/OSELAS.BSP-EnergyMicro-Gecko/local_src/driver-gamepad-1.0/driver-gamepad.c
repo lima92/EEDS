@@ -176,17 +176,17 @@ int setup_GPIO(void)
 		printk("GPIO INPUT SUCCESS\n");
 	}
 
-	//ioremap = GPIO_PC_BASE; 
+	
 	ioremap = ioremap_nocache(GPIO_PC_BASE, 36);
 	if(IS_ERR(ioremap)){return -1;}
 	
 	iowrite32(0x33333333, ioremap + GPIO_PC_MODEL);
 	printk("Set pin 0-7 for input...\n");
 	//printk("MODEL: %i\n", ioread32(ioremap + GPIO_PC_MODEL));
- 	//GPIO_PC_MODEL = 0x33333333;
+ 	
 	iowrite32(0xff, ioremap + GPIO_PC_DOUT);
 	printk("Enable internal pull-up...\n");
-  	//GPIO_PC_DOUT = 0xFF;
+  	
 
 	printk("GPIO ARE NOW SET UP!\n\n");
 	return 0;
@@ -205,19 +205,19 @@ int setup_interrupts(void)
 		printk("IRQ MEM REQUEST SUCCESS\n");
 	}
 
-	//ioremap = GPIO_PC_BASE; 
+	
 	irq_remap = ioremap_nocache(GPIO_PA_BASE + GPIO_EXTIPSELL, 32);
 	if(IS_ERR(irq_remap)){return -1;}
 
-  	//GPIO_EXTIPSELL = 0x22222222;
+  	
 	iowrite32(0x22222222, irq_remap);
 	printk("Enable port C to handle the interrupt...\n%i\n", ioread32(irq_remap));
 
-	//GPIO_EXTIFALL = 0xFF;
+	
 	iowrite32(0xff,  irq_remap + GPIO_EXTIFALL - GPIO_EXTIPSELL);
 	printk("Set interrupt handling for 1->0 transitions...\n%i\n", ioread32(irq_remap + GPIO_EXTIFALL - GPIO_EXTIPSELL));
 
-	//GPIO_EXTIRISE = 0xFF;
+	
 	iowrite32(0xff,  irq_remap + GPIO_EXTIRISE - GPIO_EXTIPSELL);
 	printk("Set interrupt handling for 0->1 transitions...\n%i\n", ioread32(irq_remap + GPIO_EXTIRISE - GPIO_EXTIPSELL));
 
@@ -233,7 +233,7 @@ int setup_interrupts(void)
 		printk(KERN_INFO "can't get assigned irq 18\n");
 	}
 
-	//GPIO_IEN = 0xFF;
+	
 	iowrite32(0xff,  irq_remap + GPIO_IEN - GPIO_EXTIPSELL);
 	printk("Enable interrupt generation...\n%i\n", ioread32(irq_remap + GPIO_IEN - GPIO_EXTIPSELL));
 

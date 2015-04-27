@@ -54,10 +54,8 @@ int draw_init()
 	draw_frame();
 	printf("draw_frame done\n");
 	
-//	draw_background_grid();
+//	draw_background_grid(); //For debugging purposes
 	
-	
-//	printf("predraw\n");
 	draw_to_display(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0);
 	printf("End of draw_init()");
 	return 0;
@@ -228,11 +226,14 @@ void player_win(player *p){
 	draw_letter(_char_Y, 2, 142, 90, current_color);
 	draw_letter(_char_E, 2, 156, 90, current_color);
 	draw_letter(_char_R, 2, 170, 90, current_color);
+
 	if(current_color == green_dark){
 		draw_letter(_char_one, 2, 190, 90, current_color);
-	}else{
+	}
+	else{
 		draw_letter(_char_two, 2, 190, 90, current_color);
 	}
+	
 	draw_letter(_char_W, 2, 210, 90, current_color);
 	draw_letter(_char_I, 2, 224, 90, current_color);
 	draw_letter(_char_N, 2, 238, 90, current_color);
