@@ -163,7 +163,7 @@ void input_handler(int sigio){
 
 	printf("Buffer value: %i\n", input_raw);
 
-	state = ~state & (~input_raw);
+	state = ~ (state | input_raw);
 
 	setSnakeDir(state);
 	//printf("New state: %i\n", state);
